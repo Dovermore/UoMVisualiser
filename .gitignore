@@ -1,5 +1,5 @@
 # Ignore All output files, for they are too large
-./result/
+result/**
 
 # Ignore all production files
-./target/**
+target/**
