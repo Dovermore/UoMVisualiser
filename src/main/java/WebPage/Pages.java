@@ -76,7 +76,7 @@ public class Pages implements PageQueue {
     }
 
     /**
-     * Initialise the page object with correct prefix/postfix for different pages
+     * Initialise the page object with correct PREFIX/postfix for different pages
      */
     public Pages(int year) {
         searches = new ArrayList<>();
@@ -88,7 +88,7 @@ public class Pages implements PageQueue {
 
     public void writeToFile() {
         try {
-            FileWriter fileWriter = new FileWriter(Constants.fPath + Constants.linkFName);
+            FileWriter fileWriter = new FileWriter(Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_LINK_CSV);
             CSVPrinter csvPrinter = new CSVPrinter(fileWriter,
                     CSVFormat.DEFAULT.withHeader("code", "overview",
                             "eligibility", "assessment",

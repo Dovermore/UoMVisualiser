@@ -16,7 +16,7 @@ public class Crawler {
     // Max links to visit
     private final static int MAX_TO_VISIT = 15;
 
-    // default starting point, prefix to all links
+    // default starting point, PREFIX to all links
     private final static String INITIAL_LINK = "https://handbook.unimelb.edu.au/2019/subjects";
 
     // visited links

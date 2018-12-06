@@ -19,14 +19,8 @@ public class LinkRecordProcessor {
             FileReader fReader = new FileReader(fileName);
             CSVParser csvParser = new CSVParser(fReader, CSVFormat.DEFAULT.withHeader());
 
-//            int i = 0;
-
             for (CSVRecord record : csvParser) {
-//                i++;
                 subjects.add(new Subject(record));
-//                if (i > 10) {
-//                    break;
-//                }
             }
             csvParser.close();
             fReader.close();
@@ -35,17 +29,24 @@ public class LinkRecordProcessor {
         }
     }
 
+    public LinkRecordProcessor(ArrayList<Subject> subjects) {
+        this.subjects = subjects;
+    }
+
     public LinkRecordProcessor() {
-        this(Constants.fPath + Constants.linkFName);
+        this(Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_LINK_CSV);
     }
 
     public void processSubjects() {
-
+        for (Subject subject : subjects) {
+            subject.processOverview();
+            subject.processEligibility();
+        }
     }
 
     public void saveSubjects() {
         try {
-            FileWriter fWriter = new FileWriter(Constants.fPath + Constants.subjectFName);
+            FileWriter fWriter = new FileWriter(Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_INFO_JSON);
 
             JSONObject subjectsJson = new JSONObject();
 

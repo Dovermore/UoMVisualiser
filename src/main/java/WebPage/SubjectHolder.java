@@ -1,5 +1,6 @@
 package WebPage;
 
+import Util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,26 +16,18 @@ public class SubjectHolder {
     // All subjects listed
     private static ArrayList<String> allSubjects = new ArrayList<>();
 
-    // Field postfix
-    private static String overviewPostfix = "";
-    private static String eligibilityPostfix = "/eligibility-and-requirements";
-    private static String assessmentPostfix = "/assessment";
-    private static String datesTimesPostfix = "/dates-times";
-    private static String furtherInfoPostfix = "/further-information";
-    private static String printPostfix = "/print";
-
     // Basic subject information
     private String code;
     private String facultyCode;
     private String yearCode;
 
     // Links of all fields
-    private String overviewLink = "null";
-    private String eligibilityLink = "null";
-    private String assessmentLink = "null";
-    private String datesTimesLink = "null";
-    private String furtherInfoLink = "null";
-    private String printLink = "null";
+    private String overviewLink = Constants.NULL;
+    private String eligibilityLink = Constants.NULL;
+    private String assessmentLink = Constants.NULL;
+    private String datesTimesLink = Constants.NULL;
+    private String furtherInfoLink = Constants.NULL;
+    private String printLink = Constants.NULL;
 
 
     public SubjectHolder(String code) {
@@ -45,7 +38,7 @@ public class SubjectHolder {
     }
 
     public void addLink(String link) {
-        if (link.contains(code + overviewPostfix)) {
+        if (link.contains(code + Constants.LinkConstant.OVERVIEW_POSTFIX)) {
             overviewLink = link;
 
             try {
@@ -59,15 +52,15 @@ public class SubjectHolder {
                 for (Element page : allPages) {
                     String pageString = page.attr("abs:href");
 
-                    if (pageString.contains(code + eligibilityPostfix)) {
+                    if (pageString.contains(code + Constants.LinkConstant.ELIGIBILITY_POSTFIX)) {
                         eligibilityLink = pageString;
-                    } else if (pageString.contains(code + assessmentPostfix)) {
+                    } else if (pageString.contains(code + Constants.LinkConstant.ASSESSMENT_POSTFIX)) {
                         assessmentLink = pageString;
-                    } else if (pageString.contains(code + datesTimesPostfix)) {
+                    } else if (pageString.contains(code + Constants.LinkConstant.DATES_TIMES_POSTFIX)) {
                         datesTimesLink = pageString;
-                    } else if (pageString.contains(code + furtherInfoPostfix)) {
+                    } else if (pageString.contains(code + Constants.LinkConstant.FURTHER_INFO_POSTFIX)) {
                         furtherInfoLink = pageString;
-                    } else if (pageString.contains(code + printPostfix)) {
+                    } else if (pageString.contains(code + Constants.LinkConstant.PRINT_POSTFIX)) {
                         printLink = pageString;
                     }
                 }
