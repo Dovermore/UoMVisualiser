@@ -37,10 +37,6 @@ public class Subject {
     private HashSet<String> corequisites = new HashSet<>();
     private HashSet<String> prohibitions = new HashSet<>();
 
-    // Prerequisite adding mode
-    private static int AND_MODE = 0;
-    private static int OR_MODE = 1;
-
     // Links
     private String overviewLink;
     private String eligibilityLink;
@@ -61,10 +57,6 @@ public class Subject {
         this.code = record.get(0);
         this.overviewLink = record.get(1);
         this.eligibilityLink = record.get(2);
-
-        System.out.println(code);
-        System.out.println(overviewLink);
-        System.out.println(eligibilityLink);
 
         try {
             if (!overviewLink.equals(Constants.NULL)) {
@@ -119,8 +111,8 @@ public class Subject {
         JSONObject info = new JSONObject();
 
         JSONObject linkInfo = new JSONObject();
-        // TODO make parsed info richer
 
+        // TODO make parsed info richer
         JSONObject parsedInfo = new JSONObject();
         parsedInfo.put(Constants.JSONKey.CODE, code);
 
@@ -171,7 +163,6 @@ public class Subject {
                     if (name.charAt(name.length()-1) == ' ') {
                         name = name.substring(0, name.length()-1);
                     }
-                    System.out.println(name);
                 } else {
                     System.out.println("No match :" + nameHtml);
                 }
@@ -183,7 +174,6 @@ public class Subject {
                 // If matcher found matches, output it
                 if (matcher.find()) {
                     credit = Float.parseFloat(matcher.group(1));
-                    System.out.println(credit);
                 }
 
                 // Get year/campus/availability/etc...
@@ -198,16 +188,13 @@ public class Subject {
                         if (!HelperMethods.containsIgnoreCase(rowCell.text(),
                                 Constants.ParsingConstant.NOT_AVAILABLE)) {
                             year = Year.parse(rowCell.text());
-                            System.out.println(year.toString());
                         }
                     } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
                             Constants.ParsingConstant.SUBJECT_LEVEL)) {
                             subjectLevel = rowCell.text();
-                            System.out.println(subjectLevel);
                     } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
                             Constants.ParsingConstant.CAMPUS)) {
                             campus = rowCell.text();
-                            System.out.println(campus);
                     } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
                             Constants.ParsingConstant.AVAILABILITY)) {
                         // Availability are texts captured by div tags
@@ -215,7 +202,6 @@ public class Subject {
                         for (Element timeElement : rowCell.children()) {
                             availability.add(timeElement.text());
                         }
-                        System.out.println(availability.toString());
                     }
                 }
             } catch (Exception e) {
@@ -268,43 +254,65 @@ public class Subject {
             // Match against matcher
             Matcher matcher = Constants.ParsingConstant.PREREQUISITE_PATTERN.matcher(requisiteText);
 
-            int mode = AND_MODE;
-            HashSet<String> currentRequisites = new HashSet<>();
-
             // TODO deal with 3-D requirement, but not just buckets of requirements
             // TODO Current: (A) and (B or C) and (D) --> need to deal with --> (A and B) or (B and C)
+            // All subject that already appeared, remove duplicated ones
+            ArrayList<String> expressions = new ArrayList<>();
+            // Collect all found matches
             while (matcher.find()) {
-                // TODO THIS PART need serious improvement!!!!!!!!!!!!!!
-                // TODO THIS PART need serious ERROR correction!!!!!!!!!!!!!!
-//                switch (matcher.group().toLowerCase()) {
-//                    // And Case
-//                    case Constants.ParsingConstant.AND_1:
-//                    case Constants.ParsingConstant.AND_2:
-//                        mode = AND_MODE;
-//                        prerequisites.add(currentRequisites);
-//                        currentRequisites = new HashSet<>();
-//                        break;
-//                    // Or case
-//                    case Constants.ParsingConstant.OR_1:
-//                    case Constants.ParsingConstant.OR_2:
-//                        mode = OR_MODE;
-//                        break;
-//                    // Subject code case
-//                    default:
-//                        currentRequisites.add(matcher.group());
-//                        System.out.println(matcher.group());
-//                        if (mode == AND_MODE) {
-//                            prerequisites.add(currentRequisites);
-//                            currentRequisites = new HashSet<>();
-//                        } else if (mode == OR_MODE) {
-//                            // do nothing
-//                        }
-//                }
+                expressions.add(matcher.group().toLowerCase());
             }
-            // If it's "AND" mode, the bucket is already added
-            if (mode == OR_MODE) {
+
+            // Prerequisite adding mode
+            int AND_MODE = 0;
+            int ONEOF_MODE = 1;
+            int mode = AND_MODE;
+
+            HashSet<String> appeared = new HashSet<>();
+            HashSet<String> currentRequisites = new HashSet<>();
+            // TODO I have no idea if this works or not
+            for (int i = 0; i < expressions.size(); i++) {
+                String expression = expressions.get(i);
+                switch (expression) {
+                    case Constants.ParsingConstant.AND_1:
+                    case Constants.ParsingConstant.AND_2:
+                        mode = AND_MODE;
+                        break;
+                    case Constants.ParsingConstant.OR_1:
+                        break;
+                    case Constants.ParsingConstant.OR_2:
+                        if (i > 0 && expressions.get(i - 1).equals(Constants.ParsingConstant.AND_1)) {
+                            prerequisites.add(currentRequisites);
+                            currentRequisites = new HashSet<>();
+                        }
+                        mode = ONEOF_MODE;
+                        break;
+                    default:
+                        // prevent duplication
+                        if (appeared.contains(expression)) {
+                            expressions.remove(i);
+                            i--;
+                            break;
+                        }
+                        appeared.add(expression);
+
+                        if (currentRequisites.size() < 1) {
+                            currentRequisites.add(expression);
+                        } else if ((mode == ONEOF_MODE) ||
+                                (expressions.get(i - 1).equals(Constants.ParsingConstant.OR_1))) {
+                            currentRequisites.add(expression);
+                        } else {
+                            prerequisites.add(currentRequisites);
+                            currentRequisites = new HashSet<>();
+                            currentRequisites.add(expression);
+                        }
+                }
+            }
+            if (currentRequisites.size() > 0) {
                 prerequisites.add(currentRequisites);
             }
+            System.out.println(code);
+            System.out.println(name);
             System.out.println(prerequisites.toString());
         } catch (Exception e) {
             System.out.println(code);
