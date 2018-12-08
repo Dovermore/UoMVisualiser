@@ -120,6 +120,55 @@ public final class Constants {
         public final static String PARSED_INFO = "parsedInfo";
 
         // TODO parsed subject constants to be added
+        /**
+         * Subject name key
+         */
+        public final static String NAME = "name";
+
+        /**
+         * Subject name key
+         */
+        public final static String YEAR = "year";
+
+        /**
+         * Subject level key
+         */
+        public final static String LEVEL = "level";
+
+        /**
+         * Subject credit key
+         */
+        public final static String CREDIT = "credit";
+
+        /**
+         * Subject campus key
+         */
+        public final static String CAMPUS = "campus";
+
+        /**
+         * Subject availability key
+         */
+        public final static String AVAILABILITY = "availability";
+
+        /**
+         * Subject prerequisites key
+         */
+        public final static String PREREQUISITES = "prerequisites";
+
+        /**
+         * Subject prerequisites key
+         */
+        public final static String SUB_PREREQUISITES = "subPrerequisites";
+
+        /**
+         * Subject corequisites key
+         */
+        public final static String COREQUISITES = "corequisites";
+
+        /**
+         * Subject prohibitions key
+         */
+        public final static String PROHIBITIONS = "prohibitions";
     }
 
     /**
@@ -189,7 +238,7 @@ public final class Constants {
         /**
          * Course header main regex for getting name
          */
-        public final static String COURSE_HEADER_SUBJECT_NAME_RE = "(.+)\\(\\w{4}\\d{5}\\)";
+        public final static String COURSE_HEADER_SUBJECT_NAME_RE = "(.+?)\\s?\\(\\w{4}\\d{5}\\)";
         /**
          * Compiled pattern of Course header main regex for getting name
          */
@@ -228,7 +277,7 @@ public final class Constants {
         /**
          * Deciding the mode of adding new requisites - type 2 "or" relation, using the same row
          */
-        public final static String OR_2 = "one of";
+        public final static String ONE_OF = "one of";
 
         /**
          * Subject code regex

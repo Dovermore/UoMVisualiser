@@ -19,17 +19,24 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
+
+// TODO VERY important, the getXXXXX method will be used by library to determine the parsed json object,
+// TODO Making new class of info and link info will automatically convert current json structure to the desired structure!
 public class Subject {
 
     // TODO make object for most of the attributes, so it's easier to link and filter semesters
+    //      Links make a specific link object, and fields make classes based on it's feature
+
+    // TODO Clean up the default value of these fields. Lots fields don't have elegant ways of handling NULL
     // Parsed contents
-    private String code;
-    private String name;
+    private String code = Constants.NULL;
+    private String name = Constants.NULL;
     private String subjectLevel;
-    private Year year;
+    private Year year = Year.parse("0000");
     private float credit;
-    private String campus;
+    private String campus = Constants.NULL;
     private ArrayList<String> availability = new ArrayList<>();
+    // TODO a proper subject overview is need to be extracted
     private String subjectOverview;
 
     // The prerequisites can have 'or' condition. Use a 2D structure instead
@@ -37,9 +44,9 @@ public class Subject {
     private HashSet<String> corequisites = new HashSet<>();
     private HashSet<String> prohibitions = new HashSet<>();
 
-    // Links
-    private String overviewLink;
-    private String eligibilityLink;
+    // Links, by default is "null"
+    private String overviewLink = Constants.NULL;
+    private String eligibilityLink = Constants.NULL;
 
 
     // HTML documents
@@ -92,7 +99,6 @@ public class Subject {
             System.err.println("Error reading subject");
             e.printStackTrace();
         }
-
     }
 
 
@@ -105,23 +111,17 @@ public class Subject {
      * @return Parsed Json object
      */
     public JSONObject toJSONObject() {
+        // TODO FIXME ************THE JSONObject.Write will automatically parse all the fields to proper field name!!!
+        // The base JSON object of the subject stored:
+        //          {"code" : code, "info" : info(JSONObject)}
         JSONObject base = new JSONObject();
         base.put(Constants.JSONKey.CODE, code);
 
+        // Detailed information of subject:
+        //          {"linkInfo" : linkInfo, "parsedInfo" : parsedInfo}
         JSONObject info = new JSONObject();
-
-        JSONObject linkInfo = new JSONObject();
-
-        // TODO make parsed info richer
-        JSONObject parsedInfo = new JSONObject();
-        parsedInfo.put(Constants.JSONKey.CODE, code);
-
-        JSONObject overviewJson = linkJson(Constants.ParsingConstant.OVERVIEW, overviewLink, overviewDocument);
-        JSONObject eligibilityJson = linkJson(Constants.ParsingConstant.ELIGIBILITY,
-                eligibilityLink, eligibilityDocument);
-
-        linkInfo.put(Constants.ParsingConstant.OVERVIEW, overviewJson);
-        linkInfo.put(Constants.ParsingConstant.ELIGIBILITY, eligibilityJson);
+        JSONObject linkInfo = linkInfoJson();
+        JSONObject parsedInfo = parsedInfoJson();
 
         info.put(Constants.JSONKey.PARSED_INFO, parsedInfo);
         info.put(Constants.JSONKey.LINK_INFO, linkInfo);
@@ -131,7 +131,48 @@ public class Subject {
         return base;
     }
 
+    /**
+     * Parse the link part (raw data) of the subject
+     * @return parsed JSON object of link properties
+     */
+    private JSONObject linkInfoJson() {
+        // Link info, and stored string of html of links
+        //          {linkType("overview", "prerequisites") : linkJSONObject}
+        JSONObject linkInfo = new JSONObject();
+        JSONObject overviewJson = linkJson(Constants.ParsingConstant.OVERVIEW, overviewLink, overviewDocument);
+        JSONObject eligibilityJson = linkJson(Constants.ParsingConstant.ELIGIBILITY,
+                eligibilityLink, eligibilityDocument);
 
+        linkInfo.put(Constants.ParsingConstant.OVERVIEW, overviewJson);
+        linkInfo.put(Constants.ParsingConstant.ELIGIBILITY, eligibilityJson);
+        return linkInfo;
+    }
+
+    /**
+     * Parse the parsed/processed part (raw data) of the subject
+     * @return parsed JSON object of processed properties
+     */
+    private JSONObject parsedInfoJson() {
+        JSONObject parsedInfo = new JSONObject();
+
+        parsedInfo.put(Constants.JSONKey.CODE, code);
+        parsedInfo.put(Constants.JSONKey.NAME, name);
+        parsedInfo.put(Constants.JSONKey.CREDIT, credit);
+        parsedInfo.put(Constants.JSONKey.YEAR, year.toString());
+        parsedInfo.put(Constants.JSONKey.LEVEL, subjectLevel);
+        // TODO make parsedInfo richer
+
+        return parsedInfo;
+    }
+
+
+    /**
+     * Create a JSONObject based on the type, url, document provided
+     * @param type Link type (overview, eligibility, etc...)
+     * @param url  Link Content
+     * @param document HTML document of the link
+     * @return Formatted JSON object of the link
+     */
     private static JSONObject linkJson(String type, String url, Document document) {
         JSONObject jsonObject = new JSONObject();
 
@@ -146,80 +187,113 @@ public class Subject {
         return jsonObject;
     }
 
+    /**
+     * Process the overview document, if overviewLink exist and overview document is not "null".
+     * Then store it to various variables
+     */
     public void processOverview() {
-        if (overviewDocument != null && !overviewDocument.text().equals(Constants.NULL)) {
-            // TODO future make the overview extraction match approximate string
+        // TODO refactor this part semi-duplicated codes, add condition of link to the condition field elegantly
+        if (overviewDocument == null) {
             try {
-                Element overviewHeader = overviewDocument.getElementsByClass(Constants
-                        .ParsingConstant.COURSE_HEADER_INNER).get(0);
-
-                // Get the Html segment that only contains name and code
-                String nameHtml = overviewHeader.getElementsByClass(Constants
-                        .ParsingConstant.COURSE_HEADER_MAIN).get(0).html();
-                Matcher matcher = Constants.ParsingConstant.COURSE_HEADER_SUBJECT_NAME_PATTERN.matcher(nameHtml);
-                // If matcher found matches, output it
-                if (matcher.matches()) {
-                    name = matcher.group(1);
-                    if (name.charAt(name.length()-1) == ' ') {
-                        name = name.substring(0, name.length()-1);
-                    }
-                } else {
-                    System.out.println("No match :" + nameHtml);
-                }
-
-                // Get the Html segment that contains credits points
-                String pointHtml = overviewHeader.getElementsByClass(Constants
-                        .ParsingConstant.COURSE_HEADER_DETAIL).html();
-                matcher = Constants.ParsingConstant.COURSE_HEADER_CREDIT_PATTERN.matcher(pointHtml);
-                // If matcher found matches, output it
-                if (matcher.find()) {
-                    credit = Float.parseFloat(matcher.group(1));
-                }
-
-                // Get year/campus/availability/etc...
-                Element overviewBox = overviewDocument.getElementsByClass(Constants
-                        .ParsingConstant.CLASS_OVERVIEW_BOX).get(0);
-                Elements rows = overviewBox.getElementsByTag(Constants.HTMLConstant.TR);
-                for (Element row : rows) {
-                    Element rowHeader = row.child(0);
-                    Element rowCell = rowHeader.nextElementSibling();
-                    if (HelperMethods.containsIgnoreCase(rowHeader.text(),
-                            Constants.ParsingConstant.YEAR)) {
-                        if (!HelperMethods.containsIgnoreCase(rowCell.text(),
-                                Constants.ParsingConstant.NOT_AVAILABLE)) {
-                            year = Year.parse(rowCell.text());
-                        }
-                    } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
-                            Constants.ParsingConstant.SUBJECT_LEVEL)) {
-                            subjectLevel = rowCell.text();
-                    } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
-                            Constants.ParsingConstant.CAMPUS)) {
-                            campus = rowCell.text();
-                    } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
-                            Constants.ParsingConstant.AVAILABILITY)) {
-                        // Availability are texts captured by div tags
-                        // TODO deal with [Month - Online] type of availability, (month and online)
-                        for (Element timeElement : rowCell.children()) {
-                            availability.add(timeElement.text());
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(overviewDocument.getElementsByClass(Constants
-                        .ParsingConstant.CLASS_OVERVIEW_BOX).get(0));
-
+                overviewDocument = Jsoup.connect(overviewLink).get();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        if (overviewDocument != null && !overviewDocument.text().equals(Constants.NULL)) {
+            // Get the overview document if not fetched yet.
+
+            processOverviewHeader();
+            processOverviewBox();
+
+        }
     }
 
+    /**
+     * Internal method used by processOverview to process the header to get subject name and subject credit
+     */
+    private void processOverviewHeader() {
+        // TODO future make the overview extraction match approximate string
+        try {
+            Element overviewHeader = overviewDocument.getElementsByClass(Constants
+                    .ParsingConstant.COURSE_HEADER_INNER).get(0);
+
+            // Get the Html segment that only contains name and code
+            String nameHtml = overviewHeader.getElementsByClass(Constants
+                    .ParsingConstant.COURSE_HEADER_MAIN).get(0).html();
+            Matcher matcher = Constants.ParsingConstant.COURSE_HEADER_SUBJECT_NAME_PATTERN.matcher(nameHtml);
+            // If matcher found matches, output it
+            if (matcher.matches()) {
+                name = matcher.group(1);
+                // Updated to non-greedy regex, the trailing space removing condition won't be needed
+            } else {
+                System.err.format("---------\n" +
+                        "Regex found no matching name group\n" +
+                        "    code: %s\n" +
+                        "    name html:\n %s\n", code, nameHtml);
+            }
+
+            // Get the Html segment that contains credits points
+            String pointHtml = overviewHeader.getElementsByClass(Constants
+                    .ParsingConstant.COURSE_HEADER_DETAIL).html();
+            matcher = Constants.ParsingConstant.COURSE_HEADER_CREDIT_PATTERN.matcher(pointHtml);
+            // If matcher found matches, output it
+            if (matcher.find()) {
+                credit = Float.parseFloat(matcher.group(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void processOverviewBox() {
+        try {
+            // Get year/campus/availability/etc...
+            Element overviewBox = overviewDocument.getElementsByClass(Constants
+                    .ParsingConstant.CLASS_OVERVIEW_BOX).get(0);
+            // The information is all contained in table entries
+            Elements rows = overviewBox.getElementsByTag(Constants.HTMLConstant.TR);
+            for (Element row : rows) {
+                Element rowHeader = row.child(0);
+                Element rowCell = rowHeader.nextElementSibling();
+                if (HelperMethods.containsIgnoreCase(rowHeader.text(),
+                        Constants.ParsingConstant.YEAR)) {
+                    if (!HelperMethods.containsIgnoreCase(rowCell.text(),
+                            Constants.ParsingConstant.NOT_AVAILABLE)) {
+                        year = Year.parse(rowCell.text());
+                    }
+                } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
+                        Constants.ParsingConstant.SUBJECT_LEVEL)) {
+                    subjectLevel = rowCell.text();
+                } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
+                        Constants.ParsingConstant.CAMPUS)) {
+                    campus = rowCell.text();
+                } else if (HelperMethods.containsIgnoreCase(rowHeader.text(),
+                        Constants.ParsingConstant.AVAILABILITY)) {
+                    // Availability are texts captured by div tags
+                    // TODO deal with [Month - Online] type of availability, (month type and online)
+                    for (Element timeElement : rowCell.children()) {
+                        availability.add(timeElement.text());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Process the overview document, if eligibilityLink exist and eligibility document is not "null".
+     * Then store it to various variables
+     */
     public void processEligibility() {
+        // TODO refactor this part semi-duplicated codes, add condition of link to the condition field elegantly
         if (eligibilityDocument == null) {
             try {
                 eligibilityDocument = Jsoup.connect(eligibilityLink).get();
             } catch (IOException e) {
                 e.printStackTrace();
-                return;
             }
         }
         if (eligibilityDocument != null && !eligibilityDocument.body().text().equals(Constants.NULL)) {
@@ -229,23 +303,9 @@ public class Subject {
         }
     }
 
-    public static ArrayList<Subject> readSubjectsFile(String fName) {
-        ArrayList<Subject> out = new ArrayList<>();
-        try (BufferedReader buffer = new BufferedReader(new FileReader(fName))) {
-            JSONObject jsonObject = new JSONObject(buffer.lines()
-                    .collect(Collectors.joining()));
-
-            for (String key : jsonObject.keySet()) {
-                // System.out.println(key);
-                out.add(new Subject(jsonObject.getJSONObject(key)));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return out;
-    }
-
+    /**
+     * Internal method used by process Eligibility to get prerequisite information
+     */
     private void processPrerequisite() {
         // get the element, convert to just plain text
         Element prerequisitesElement = eligibilityDocument.getElementById(Constants.ParsingConstant.PREREQUISITES);
@@ -270,7 +330,20 @@ public class Subject {
 
             HashSet<String> appeared = new HashSet<>();
             HashSet<String> currentRequisites = new HashSet<>();
-            // TODO I have no idea if this works or not
+            // FIXME I have no idea if this works or not,
+            // TODO And also this is far too basic for parsing the HTML which has extremely complicated rules
+            // Explanation:
+            // First strip the html off tags, leaving only plain text, since subject codes will always
+            // show in plain text, then removing duplicated subject code. For some subjects includes additional
+            // description about some prerequisite (which ideally should also be parsed.)
+            // Then, the parsing assumes subject are by default separated by and relation. From then onwards, when token
+            // "one of" is seen, this switches to "one of mode".
+            // AND mode: All subjects will be stored in different HashSet to indicate all choices are needed
+            // ONEOF mode: Subsequent subjects will be stored in the same HashSet to indicate, choosing either one will
+            //             satisfy the requirement
+            // (Side note: this assumes the subject description will always be in 'sum of product' form,
+            //  which is "not always true")
+            // Example prerequisite: [[A],[B],[C,D,E]] --> A,B,C | A,B,D | A,B,E all satisfies the prerequisite
             for (int i = 0; i < expressions.size(); i++) {
                 String expression = expressions.get(i);
                 switch (expression) {
@@ -280,7 +353,7 @@ public class Subject {
                         break;
                     case Constants.ParsingConstant.OR_1:
                         break;
-                    case Constants.ParsingConstant.OR_2:
+                    case Constants.ParsingConstant.ONE_OF:
                         if (i > 0 && expressions.get(i - 1).equals(Constants.ParsingConstant.AND_1)) {
                             prerequisites.add(currentRequisites);
                             currentRequisites = new HashSet<>();
@@ -321,12 +394,40 @@ public class Subject {
         }
     }
 
+    /**
+     * Internal method used by process Eligibility to get corequisite information
+     */
     private void processCorequisite() {
 
     }
 
+    /**
+     * Internal method used by process Eligibility to get not allowed subject information
+     */
     private void processProhibition() {
 
+    }
+
+    /**
+     * Read the subject information JSON file and return a ArrayList containing all read information about the file
+     * @param fName path and name of the file to be read
+     * @return ArrayList created by parsing the JSON file
+     */
+    public static ArrayList<Subject> readSubjectsFile(String fName) {
+        ArrayList<Subject> out = new ArrayList<>();
+        try (BufferedReader buffer = new BufferedReader(new FileReader(fName))) {
+            JSONObject jsonObject = new JSONObject(buffer.lines()
+                    .collect(Collectors.joining()));
+
+            for (String key : jsonObject.keySet()) {
+                // System.out.println(key);
+                out.add(new Subject(jsonObject.getJSONObject(key)));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return out;
     }
 
     public String getOverviewLink() {
@@ -349,16 +450,29 @@ public class Subject {
         return code;
     }
 
+
+    /**
+     * We use code to identify a subject
+     */
     @Override
     public int hashCode() {
-        return overviewLink.hashCode();
+        return code.hashCode();
     }
 
+    /**
+     * We use code to identify a subject
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Subject) {
-            return ((Subject) obj).overviewLink.equals(overviewLink);
+            return ((Subject) obj).code.equals(code);
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        // Null value
+        return String.format("code: %s, name: %s, year: %s", code, name, year.toString());
     }
 }
