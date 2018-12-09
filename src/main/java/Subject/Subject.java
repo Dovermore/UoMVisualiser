@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 // TODO VERY important, the getXXXXX method will be used by library to determine the parsed json object,
 // TODO Making new class of info and link info will automatically convert current json structure to the desired structure!
+// TODO This file has TOO MANY LINES, need to delegate functions to component class. Think of a way of using delegation to write further refactor
 public class Subject {
 
     // TODO make object for most of the attributes, so it's easier to link and filter semesters
@@ -29,7 +30,9 @@ public class Subject {
 
     // TODO Clean up the default value of these fields. Lots fields don't have elegant ways of handling NULL
     // Parsed contents
+
     private String code = Constants.NULL;
+
     private String name = Constants.NULL;
     private String subjectLevel;
     private Year year = Year.parse("0000");
