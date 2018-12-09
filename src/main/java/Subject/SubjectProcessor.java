@@ -1,11 +1,13 @@
 package Subject;
 
 import Util.Constants;
+import Util.HelperMethods;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,8 +49,8 @@ public class SubjectProcessor {
     /**
      * Default save option
      */
-    public void saveSubjects() {
-        saveSubjects(subjects.size(), Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_INFO_JSON);
+    public void saveSubjects(String fName) {
+        saveSubjects(fName, subjects.size());
     }
 
     /**
@@ -56,25 +58,31 @@ public class SubjectProcessor {
      * @param num the number of records to be stored
      * @param fName The file to store to
      */
-    public void saveSubjects(int num, String fName) {
+    public void saveSubjects(String fName, int num) {
         // Set num to be less or equal to subject.size()
-        num = num < subjects.size() ? subjects.size() : num;
+        num = (num > subjects.size() || num == 0) ? subjects.size() : num;
 
-        try {
-            FileWriter fWriter = new FileWriter(fName);
+        File file = HelperMethods.createFile(fName);
 
-            JSONObject subjectsJson = new JSONObject();
+        if (file != null) {
+            try {
+                FileWriter fWriter = new FileWriter(fName);
 
-            for (Subject subject : subjects.subList(0, num)) {
-                subjectsJson.put(subject.getCode(), subject.toJSONObject());
+                JSONObject subjectsJson = new JSONObject();
+
+                for (Subject subject : subjects.subList(0, num)) {
+                    subjectsJson.put(subject.getCode(), subject.toJSONObject());
+                }
+
+                subjectsJson.write(fWriter);
+                fWriter.flush();
+                fWriter.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            subjectsJson.write(fWriter);
-            fWriter.flush();
-            fWriter.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            System.err.format("Failed to save to file: %s", fName);
         }
     }
 }

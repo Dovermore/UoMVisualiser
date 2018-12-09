@@ -413,7 +413,7 @@ public class Subject {
      * @param fName path and name of the file to be read
      * @return ArrayList created by parsing the JSON file
      */
-    public static ArrayList<Subject> readSubjectsFile(String fName) {
+    public static ArrayList<Subject> readSubjectsJSON(String fName) {
         ArrayList<Subject> out = new ArrayList<>();
         try (BufferedReader buffer = new BufferedReader(new FileReader(fName))) {
             JSONObject jsonObject = new JSONObject(buffer.lines()

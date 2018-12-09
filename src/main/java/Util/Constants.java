@@ -1,5 +1,6 @@
 package Util;
 
+import java.time.Year;
 import java.util.regex.Pattern;
 
 public final class Constants {
@@ -7,6 +8,11 @@ public final class Constants {
      * Default String if result not present
      */
     public final static String NULL = "null";
+
+    /**
+     * Default String if result not present
+     */
+    public final static Year DEFAULT_YEAR = Year.parse("2019");
 
 
     /**
@@ -16,7 +22,7 @@ public final class Constants {
         /**
          * Sets the PREFIX for all pages to prevent navigate to unwanted pages.
          */
-        public final static String PREFIX = "https://handbook.unimelb.edu.au/%d/subjects";
+        public final static String PREFIX = "https://handbook.unimelb.edu.au/%s/subjects";
 
         /**
          * Postfix regex String for search page

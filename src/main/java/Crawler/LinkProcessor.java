@@ -1,5 +1,8 @@
 package Crawler;
 
+import Util.Constants;
+
+import java.time.Year;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,12 +10,11 @@ import static Util.Constants.LinkConstant.PREFIX;
 import static Util.Constants.LinkConstant.SEARCH_POSTFIX_RE;
 import static Util.Constants.LinkConstant.SUBJECT_POSTFIX_RE;
 
+// TODO ideally should also use strategy design pattern
 public class LinkProcessor {
-    private static int YEAR = 2019;
-
-    private int year;
+    private Year year = Constants.DEFAULT_YEAR;
     // root url
-    private String root;
+    private String root = String.format(PREFIX, year.toString());
     // Pattern to match search page against
     private Pattern searchPattern;
     // Pattern to match subject page against
@@ -25,17 +27,15 @@ public class LinkProcessor {
         return ourInstance;
     }
 
-    public static void setYear(int year) {
+    public static void setYear(Year year) {
         ourInstance.year = year;
-        ourInstance.root = String.format(PREFIX, year);
+        ourInstance.root = String.format(PREFIX, year.toString());
         String pattern = ourInstance.root.replace("/", "\\/").replace(".", "\\.");
         ourInstance.searchPattern = Pattern.compile("^" + pattern + SEARCH_POSTFIX_RE);
         ourInstance.subjectPattern = Pattern.compile("^" + pattern + SUBJECT_POSTFIX_RE);
     }
 
     private LinkProcessor() {
-        year = YEAR;
-        root = String.format(PREFIX, year);
         String pattern = root.replace("/", "\\/").replace(".", "\\.");
         searchPattern = Pattern.compile("^" + pattern + SEARCH_POSTFIX_RE);
         subjectPattern = Pattern.compile("^" + pattern + SUBJECT_POSTFIX_RE);

@@ -1,12 +1,15 @@
 package Crawler;
 
 import Util.Constants;
+import Util.HelperMethods;
 import Util.PageQueue;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -78,29 +81,55 @@ public class Pages implements PageQueue {
     /**
      * Initialise the page object with correct PREFIX/postfix for different pages
      */
-    public Pages(int year) {
+    public Pages(Year year) {
         searches = new ArrayList<>();
         subjects = new HashMap<>();
         seen = new ArrayList<>();
-
+        LinkProcessor.setYear(year);
         searches.add(LinkProcessor.getInstance().getRoot());
     }
 
-    public void writeToFile() {
-        try {
-            FileWriter fileWriter = new FileWriter(Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_LINK_CSV);
-            CSVPrinter csvPrinter = new CSVPrinter(fileWriter,
-                    CSVFormat.DEFAULT.withHeader("code", "overview",
-                            "eligibility", "assessment",
-                            "datesTimes", "furtherInfo", "print"));
-            for (SubjectHolder subjectHolder : subjects.values()) {
-                csvPrinter.printRecord(subjectHolder.toList());
+    /**
+     * Initialise the page object with correct PREFIX/postfix for different pages
+     */
+    public Pages() {
+        this(Constants.DEFAULT_YEAR);
+    }
+
+    public void saveSubjectsToCSV(String fName) {
+        saveSubjectsToCSV(fName, subjects.size());
+    }
+
+
+    public void saveSubjectsToCSV(String fName, int num) {
+        num = (num > subjects.size() || num == 0) ? subjects.size() : num;
+
+        File file = HelperMethods.createFile(fName);
+        if (file != null) {
+            try {
+
+                FileWriter fileWriter = new FileWriter(file);
+                CSVPrinter csvPrinter = new CSVPrinter(fileWriter,
+                        CSVFormat.DEFAULT.withHeader("code", "overview",
+                                "eligibility", "assessment",
+                                "datesTimes", "furtherInfo", "print"));
+
+                int counter = 0;
+                for (SubjectHolder subjectHolder : subjects.values()) {
+                    csvPrinter.printRecord(subjectHolder.toList());
+                    counter++;
+                    if (counter >= num) {
+                        break;
+                    }
+                }
+                csvPrinter.flush();
+                csvPrinter.close();
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            csvPrinter.flush();
-            csvPrinter.close();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            System.err.format("Failed to write to file: %s", fName);
         }
     }
 }
