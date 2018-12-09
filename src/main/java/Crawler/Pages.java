@@ -1,4 +1,4 @@
-package WebPage;
+package Crawler;
 
 import Util.Constants;
 import Util.PageQueue;

@@ -60,7 +60,7 @@ public class Subject {
         this.overviewLink = overviewLink;
     }
 
-    public Subject(CSVRecord record) {
+    public Subject(@org.jetbrains.annotations.NotNull CSVRecord record) {
         this.code = record.get(0);
         this.overviewLink = record.get(1);
         this.eligibilityLink = record.get(2);

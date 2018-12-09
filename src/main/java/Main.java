@@ -1,8 +1,8 @@
 import Crawler.Crawler;
-import Subject.LinkRecordProcessor;
+import Subject.SubjectProcessor;
 import Subject.Subject;
 import Util.Constants;
-import WebPage.Pages;
+import Crawler.Pages;
 
 public class Main {
     private static final int MODE_LINK = 0;
@@ -23,14 +23,14 @@ public class Main {
             pages.writeToFile();
         } else if (mode == MODE_SUBJECT){
             // Get Store all HTML pages to JSON format
-            LinkRecordProcessor linkRecordProcessor = new LinkRecordProcessor();
-            linkRecordProcessor.saveSubjects();
+            SubjectProcessor subjectProcessor = new SubjectProcessor();
+            subjectProcessor.saveSubjects();
         } else if (mode == MODE_ANALYSE) {
             // Read HTML from JSON format and try to parse into sensible format
-            LinkRecordProcessor linkRecordProcessor = new LinkRecordProcessor(
+            SubjectProcessor subjectProcessor = new SubjectProcessor(
                     Subject.readSubjectsFile(Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_INFO_JSON)
             );
-            linkRecordProcessor.processSubjects();
+            subjectProcessor.processSubjects();
         }
     }
 }
