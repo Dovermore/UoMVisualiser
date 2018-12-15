@@ -1,4 +1,7 @@
+package Main;
+
 import Crawler.Crawler;
+import GraphComponent.UndirectedGraph;
 import Subject.SubjectProcessor;
 import Subject.Subject;
 import Util.Constants;
@@ -8,11 +11,12 @@ import org.apache.commons.cli.*;
 import java.time.Year;
 
 /**
- * Main of the program
+ * Main.Main of the program
  */
 public class Main {
     // TODO clean up/ make better format of the cli argument
     public static void main(String[] args) {
+        UndirectedGraph ug = new UndirectedGraph();
         CommandLineParser parser = new DefaultParser();
         CommandLine cl;
         try {

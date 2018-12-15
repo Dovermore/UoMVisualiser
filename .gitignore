@@ -21,3 +21,18 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+
+
+### Intellij Idea ###
+
+# Can be savely ignored according to intellij official guide
+.idea/**/workspace.xml
+.idea/**/usage.statistics.xml
+.idea/**/tasks.xml
+
+# Auto generated for maven
+**/*.iml
+.idea/modules.xml
+.idea/libraries/*
+
+# TBC
