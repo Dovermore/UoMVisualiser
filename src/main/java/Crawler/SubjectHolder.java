@@ -1,5 +1,7 @@
 package Crawler;
 
+import Util.CSVObject;
+import Util.CSVable;
 import Util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Hold the info crawled from search page
  */
-public class SubjectHolder {
+public class SubjectHolder implements CSVable {
     // All subjects listed
     private static ArrayList<String> allSubjects = new ArrayList<>();
 
@@ -100,16 +102,16 @@ public class SubjectHolder {
         );
     }
 
-    public ArrayList<String> toList() {
-        ArrayList<String> list = new ArrayList<>();
-        list.add(code);
-        list.add(overviewLink);
-        list.add(eligibilityLink);
-        list.add(assessmentLink);
-        list.add(datesTimesLink);
-        list.add(furtherInfoLink);
-        list.add(printLink);
-        return list;
+    public CSVObject toCSVObject() {
+        CSVObject csvObject = new CSVObject();
+        csvObject.add(code);
+        csvObject.add(overviewLink);
+        csvObject.add(eligibilityLink);
+        csvObject.add(assessmentLink);
+        csvObject.add(datesTimesLink);
+        csvObject.add(furtherInfoLink);
+        csvObject.add(printLink);
+        return csvObject;
     }
 
     public String getCode() {
