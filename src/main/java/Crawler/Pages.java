@@ -116,7 +116,7 @@ public class Pages implements PageQueue {
 
                 int counter = 0;
                 for (SubjectHolder subjectHolder : subjects.values()) {
-                    csvPrinter.printRecord(subjectHolder.toList());
+                    csvPrinter.printRecord(subjectHolder.toCSVObject());
                     counter++;
                     if (counter >= num) {
                         break;
