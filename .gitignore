@@ -1,5 +1,6 @@
 # Ignore All output files, for they are too large
 result/**
+test/**
 
 # Package Files #
 *.jar
@@ -8,6 +9,7 @@ result/**
 
 # Production files
 *.class
+
 
 
 ### Maven ###
