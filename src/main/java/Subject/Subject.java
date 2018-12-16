@@ -416,15 +416,24 @@ public class Subject {
      * @param fName path and name of the file to be read
      * @return ArrayList created by parsing the JSON file
      */
-    public static ArrayList<Subject> readSubjectsJSON(String fName) {
+    public static ArrayList<Subject> readSubjectsJSON(String fName, int num) {
+        num = num != -1 ? num : Integer.MAX_VALUE;
+
         ArrayList<Subject> out = new ArrayList<>();
         try (BufferedReader buffer = new BufferedReader(new FileReader(fName))) {
             JSONObject jsonObject = new JSONObject(buffer.lines()
                     .collect(Collectors.joining()));
 
+            int count = 0;
             for (String key : jsonObject.keySet()) {
                 // System.out.println(key);
                 out.add(new Subject(jsonObject.getJSONObject(key)));
+
+                // Break the loop if count incremented to m.
+                count++;
+                if (count >= num) {
+                    break;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

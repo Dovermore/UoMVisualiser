@@ -11,6 +11,10 @@ import static Util.Constants.LinkConstant.SEARCH_POSTFIX_RE;
 import static Util.Constants.LinkConstant.SUBJECT_POSTFIX_RE;
 
 // TODO ideally should also use strategy design pattern
+
+/**
+ * This class determines if a page belongs to subject page or a search page.
+ */
 public class LinkProcessor {
     private Year year = Constants.DEFAULT_YEAR;
     // root url

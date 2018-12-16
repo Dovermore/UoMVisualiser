@@ -2,6 +2,7 @@ package Subject;
 
 import Util.Constants;
 import Util.HelperMethods;
+import Util.With;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -14,15 +15,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class SubjectProcessor {
+    // All subject record are here
     private ArrayList<Subject> subjects = new ArrayList<>();
 
-    public SubjectProcessor(String fileName) {
+
+    public SubjectProcessor(String fileName, int num) {
         try {
             FileReader fReader = new FileReader(fileName);
             CSVParser csvParser = new CSVParser(fReader, CSVFormat.DEFAULT.withHeader());
 
-            for (CSVRecord record : csvParser) {
-                subjects.add(new Subject(record));
+            for (With.Index<CSVRecord> index : With.index(csvParser)) {
+                subjects.add(new Subject(index.value()));
+
+                if (index.index() >= num - 1) {
+                    break;
+                }
             }
             csvParser.close();
             fReader.close();
@@ -35,9 +42,6 @@ public class SubjectProcessor {
         this.subjects = subjects;
     }
 
-    public SubjectProcessor() {
-        this(Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_LINK_CSV);
-    }
 
     public void processSubjects() {
         for (Subject subject : subjects) {
@@ -60,7 +64,7 @@ public class SubjectProcessor {
      */
     public void saveSubjects(String fName, int num) {
         // Set num to be less or equal to subject.size()
-        num = (num > subjects.size() || num == 0) ? subjects.size() : num;
+        num = (num > subjects.size() || num == -1) ? subjects.size() : num;
 
         File file = HelperMethods.createFile(fName);
 
@@ -70,8 +74,13 @@ public class SubjectProcessor {
 
                 JSONObject subjectsJson = new JSONObject();
 
-                for (Subject subject : subjects.subList(0, num)) {
-                    subjectsJson.put(subject.getCode(), subject.toJSONObject());
+                // Only first num number of subject to write
+                for (With.Index<Subject> index : With.index(subjects)) {
+                    subjectsJson.put(index.value().getCode(), index.value().toJSONObject());
+
+                    if (index.index() >= num - 1) {
+                        break;
+                    }
                 }
 
                 subjectsJson.write(fWriter);
