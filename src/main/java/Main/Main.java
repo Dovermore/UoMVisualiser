@@ -1,11 +1,9 @@
 package Main;
 
 import Crawler.Crawler;
-import GraphComponent.UndirectedGraph;
-import Subject.SubjectProcessor;
-import Subject.Subject;
+import Crawler.SubjectQueue;
+import Subject.SubjectHandler;
 import Util.Constants;
-import Crawler.Pages;
 import org.apache.commons.cli.*;
 
 import java.time.Year;
@@ -16,7 +14,6 @@ import java.time.Year;
 public class Main {
     // TODO clean up/ make better format of the cli argument
     public static void main(String[] args) {
-        UndirectedGraph ug = new UndirectedGraph();
         CommandLineParser parser = new DefaultParser();
         CommandLine cl;
         try {
@@ -29,24 +26,27 @@ public class Main {
         Year year = Year.parse("2019");
         int num = 0;
         boolean crawl = false;
-        boolean get_document = false;
-        boolean process_document = false;
+        int numToCrawl = Integer.MAX_VALUE;
+        boolean getHtml = false;
+        boolean parseHtml = false;
         String output = null;
         String input = null;
 
         for (Option option : cl.getOptions()) {
+            System.out.println(option.getOpt());
             switch (option.getOpt()) {
                 case "c":
                     crawl = true;
+                    numToCrawl = option.getValue() != null ? Integer.parseInt(option.getValue()) : Integer.MAX_VALUE;
                     break;
                 case "y":
                     year = Year.parse(option.getValue());
                     break;
                 case "g":
-                    get_document = true;
+                    getHtml = true;
                     break;
                 case "p":
-                    process_document = true;
+                    parseHtml = true;
                     break;
                 case "o":
                     output = option.getValue();
@@ -61,45 +61,47 @@ public class Main {
         }
 
         // At least one option has to be true
-        if (!(crawl || get_document || process_document)) {
+        if (!crawl && !getHtml && !parseHtml) {
             return;
         }
 
         if (crawl) {
-            Pages pages = new Pages(year);
-            Crawler crawler = new Crawler(pages);
-            crawler.crawl();
+            // TODO implement optional number to crawl certain number of links
+            SubjectQueue subjectQueue = new SubjectQueue(year);
+            Crawler crawler = new Crawler(subjectQueue);
+            crawler.crawl(numToCrawl);
             if (output == null) {
                 output = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_LINK_CSV;
             }
-            pages.saveSubjectsToCSV(output, num);
+            subjectQueue.saveSubjectsToCSV(output, num);
             return;
         }
 
 
-        SubjectProcessor subjectProcessor = null;
-        if (get_document) {
+        SubjectHandler subjectHandler = null;
+        if (getHtml) {
             if (input == null) {
                 input = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_LINK_CSV;
             }
-            subjectProcessor = new SubjectProcessor(input);
+            subjectHandler = new SubjectHandler(input);
         }
 
-        if (process_document) {
-            if (!get_document) {
+        if (parseHtml) {
+            if (!getHtml) {
                 if (input == null) {
                     input = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_INFO_JSON;
                 }
-                subjectProcessor = new SubjectProcessor(Subject.readSubjectsJSON(input));
+                subjectHandler = new SubjectHandler();
+                subjectHandler.loadSubjectsJSON(input);
             }
-            subjectProcessor.processSubjects();
+            subjectHandler.processSubjects();
         }
 
         if (output == null) {
             output = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_INFO_JSON;
         }
 
-        subjectProcessor.saveSubjects(output, num);
+        subjectHandler.saveSubjects(output, num);
     }
 
     /**
@@ -110,9 +112,11 @@ public class Main {
         Options options = new Options();
 
         Option crawlOption = Option.builder("c")
-                .hasArg(false)
+                .hasArg(true)
+                .optionalArg(true)
                 .longOpt("crawl-searches")
-                .desc("Use if the program should crawl all links again from search page")
+                .desc("Use if the program should crawl all links again from search page, can specify number " +
+                        "after c if don't want to crawl all links.")
                 .build();
         options.addOption(crawlOption);
 
@@ -125,14 +129,14 @@ public class Main {
 
         Option docOption = Option.builder("g")
                 .hasArg(false)
-                .longOpt("get-document")
+                .longOpt("get-html")
                 .desc("Use if the program should get HTML documents again")
                 .build();
         options.addOption(docOption);
 
         Option overviewParse = Option.builder("p")
                 .hasArg(false)
-                .longOpt("process-document")
+                .longOpt("parse-html")
                 .desc("Parse the HTML document information")
                 .build();
         options.addOption(overviewParse);
@@ -157,7 +161,7 @@ public class Main {
                 .longOpt("number-record")
                 .desc("Number of record to write to output file, for create smaller file for faster testing.")
                 .build();
-        options.addOption(input);
+        options.addOption(numRecord);
 
         return options;
     }

@@ -36,3 +36,5 @@ buildNumber.properties
 .idea/libraries/*
 
 # TBC
+
+test/

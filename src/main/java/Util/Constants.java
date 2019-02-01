@@ -1,6 +1,9 @@
 package Util;
 
+import org.jsoup.nodes.Document;
+
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public final class Constants {
@@ -91,105 +94,96 @@ public final class Constants {
      */
     public final static class JSONKey {
         /**
-         * Subject code key
+         * SubjectData code key
          */
         public final static String CODE = "code";
 
         /**
-         * Subject info key (first level)
+         * SubjectData info key (first level)
          */
         public final static String INFO = "info";
 
         /**
-         * Subject link info within info key
+         * SubjectData link info within info key
          */
         public final static String LINK_INFO = "linkInfo";
 
         /**
-         * Subject link/document type (overview/assessment/etc..) key
+         * SubjectData link/document type (overview/assessment/etc..) key
          */
         public final static String LINK_TYPE = "type";
 
         /**
-         * Subject url key
+         * SubjectData url key
          */
         public final static String URL = "url";
 
         /**
-         * Subject html key
+         * SubjectData html key
          */
         public final static String HTML = "document";
 
         /**
-         * Subject parsed information key (within info)
+         * SubjectData parsed information key (within info)
          */
         public final static String PARSED_INFO = "parsedInfo";
 
         // TODO parsed subject constants to be added
         /**
-         * Subject name key
+         * SubjectData name key
          */
         public final static String NAME = "name";
 
         /**
-         * Subject name key
+         * SubjectData name key
          */
         public final static String YEAR = "year";
 
         /**
-         * Subject level key
+         * SubjectData level key
          */
         public final static String LEVEL = "level";
 
         /**
-         * Subject credit key
+         * SubjectData credit key
          */
         public final static String CREDIT = "credit";
 
         /**
-         * Subject campus key
+         * SubjectData campus key
          */
         public final static String CAMPUS = "campus";
 
         /**
-         * Subject availability key
+         * SubjectData availability key
          */
         public final static String AVAILABILITY = "availability";
 
         /**
-         * Subject prerequisites key
+         * SubjectData prerequisites key
          */
         public final static String PREREQUISITES = "prerequisites";
 
         /**
-         * Subject prerequisites key
+         * SubjectData prerequisites key
          */
         public final static String SUB_PREREQUISITES = "subPrerequisites";
 
         /**
-         * Subject corequisites key
+         * SubjectData corequisites key
          */
         public final static String COREQUISITES = "corequisites";
 
         /**
-         * Subject prohibitions key
+         * SubjectData prohibitions key
          */
         public final static String PROHIBITIONS = "prohibitions";
     }
 
     /**
-     * Subject parsing related Strings, All constants are small case letter!
+     * SubjectData parsing related Strings, All constants are small case letter!
      */
     public final static class ParsingConstant {
-        /**
-         * Overview section String
-         */
-        public final static String OVERVIEW = "overview";
-
-        /**
-         * Eligibility and requirements String
-         */
-        public final static String ELIGIBILITY = "eligibility";
 
         /**
          * Overview box class name
@@ -202,7 +196,7 @@ public final class Constants {
         public final static String YEAR = "year of offer";
 
         /**
-         * Subject level for overview box
+         * SubjectData level for overview box
          */
         public final static String SUBJECT_LEVEL = "subject level";
 
@@ -286,9 +280,14 @@ public final class Constants {
         public final static String ONE_OF = "one of";
 
         /**
-         * Subject code regex
+         * SubjectData code regex
          */
         public final static String CODE_RE = "(\\w{4}\\d{5})";
+
+        /**
+         * SubjectData code regex
+         */
+        public final static Pattern CODE_PATTERN = Pattern.compile(CODE_RE, Pattern.CASE_INSENSITIVE);
 
         /**
          * Prerequisite regex
@@ -319,5 +318,31 @@ public final class Constants {
          */
         public final static String TD = "td";
 
+        /**
+         * Empty document
+         */
+        public final static Document NULL_HTML = new Document(NULL);
+        /**
+         * Overview section String
+         */
+        public final static String OVERVIEW = "overview";
+        /**
+         * Eligibility and requirements String
+         */
+        public final static String ELIGIBILITY = "eligibility";
+        public final static String ASSESSMENT = "assessment";
+        public final static String DATES_TIMES = "datesTimes";
+        public final static String FURTHER_INFO = "furtherInfo";
+        public final static String PRINT = "print";
+
+        public final static ArrayList<String> ALL_ENTRIES = new ArrayList<>();
+        static {
+            ALL_ENTRIES.add(OVERVIEW);
+            ALL_ENTRIES.add(ELIGIBILITY);
+            ALL_ENTRIES.add(ASSESSMENT);
+            ALL_ENTRIES.add(DATES_TIMES);
+            ALL_ENTRIES.add(FURTHER_INFO);
+            ALL_ENTRIES.add(PRINT);
+        }
     }
 }

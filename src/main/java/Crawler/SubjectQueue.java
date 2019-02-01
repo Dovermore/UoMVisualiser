@@ -2,7 +2,7 @@ package Crawler;
 
 import Util.Constants;
 import Util.HelperMethods;
-import Util.PageQueue;
+import Util.Queue;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -17,13 +17,13 @@ import java.util.HashMap;
 /**
  * Implementation of queue used in searching of the web. Note: the order is not unique.
  */
-public class Pages implements PageQueue {
+public class SubjectQueue implements Queue {
 
     // All search pages to go over
     private ArrayList<String> searches;
 
     // Stored subject page information
-    private HashMap<String, SubjectHolder> subjects;
+    private HashMap<String, SubjectHolder> holderHashMap;
 
     // All previously enqueued pages
     private ArrayList<String> seen;
@@ -52,13 +52,17 @@ public class Pages implements PageQueue {
             // get subjectHolder code
             String code = LinkProcessor.getInstance().getSubjectCode(link);
             // if subjectHolder not already existed, create it and put into map
-            if (subjects.get(code) == null) {
-                subjects.put(code, new SubjectHolder(code));
+            if (holderHashMap.get(code) == null) {
+                holderHashMap.put(code, new SubjectHolder(code));
             }
 
-            SubjectHolder subjectHolder = subjects.get(code);
+            SubjectHolder subjectHolder = holderHashMap.get(code);
             subjectHolder.addLink(link);
         }
+    }
+
+    public HashMap<String, SubjectHolder> getHolderHashMap() {
+        return holderHashMap;
     }
 
     @Override
@@ -81,9 +85,9 @@ public class Pages implements PageQueue {
     /**
      * Initialise the page object with correct PREFIX/postfix for different pages
      */
-    public Pages(Year year) {
+    public SubjectQueue(Year year) {
         searches = new ArrayList<>();
-        subjects = new HashMap<>();
+        holderHashMap = new HashMap<>();
         seen = new ArrayList<>();
         LinkProcessor.setYear(year);
         searches.add(LinkProcessor.getInstance().getRoot());
@@ -92,17 +96,17 @@ public class Pages implements PageQueue {
     /**
      * Initialise the page object with correct PREFIX/postfix for different pages
      */
-    public Pages() {
+    public SubjectQueue() {
         this(Constants.DEFAULT_YEAR);
     }
 
     public void saveSubjectsToCSV(String fName) {
-        saveSubjectsToCSV(fName, subjects.size());
+        saveSubjectsToCSV(fName, holderHashMap.size());
     }
 
 
     public void saveSubjectsToCSV(String fName, int num) {
-        num = (num > subjects.size() || num == 0) ? subjects.size() : num;
+        num = (num > holderHashMap.size() || num == 0) ? holderHashMap.size() : num;
 
         File file = HelperMethods.createFile(fName);
         if (file != null) {
@@ -115,7 +119,7 @@ public class Pages implements PageQueue {
                                 "datesTimes", "furtherInfo", "print"));
 
                 int counter = 0;
-                for (SubjectHolder subjectHolder : subjects.values()) {
+                for (SubjectHolder subjectHolder : holderHashMap.values()) {
                     csvPrinter.printRecord(subjectHolder.toCSVObject());
                     counter++;
                     if (counter >= num) {

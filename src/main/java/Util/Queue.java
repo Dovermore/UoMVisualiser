@@ -3,7 +3,7 @@ package Util;
 /**
  * WebPage queue is a interface of queue for handling the order of crawling
  */
-public interface PageQueue {
+public interface Queue {
     /**
      * Enqueue a element
      */
