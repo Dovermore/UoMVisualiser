@@ -23,15 +23,15 @@ public class OverviewHandler implements BaseHandler {
 
     @Override
     public void parse(Document html, ParsedData parsedData) {
-        if (html == null || html.text().equals(Constants.NULL)) {
+        if (HelperMethods.isNull(html)) {
             return;
         }
 
         // Clean the internal variables
-        name = Constants.NULL;
+        name = Constants.NULL_STRING;
         year = Constants.DEFAULT_YEAR;
-        level = Constants.NULL;
-        campus = Constants.NULL;
+        level = Constants.NULL_STRING;
+        campus = Constants.NULL_STRING;
         availability = new HashSet<>();
 
         processHeader(html);
@@ -52,8 +52,7 @@ public class OverviewHandler implements BaseHandler {
     private void processHeader(Document html) {
         // TODO future make the overview extraction match approximate string
         try {
-            Element header = html.getElementsByClass(Constants
-                    .ParsingConstant.COURSE_HEADER_INNER).get(0);
+            Element header = html.getElementsByClass(Constants.HtmlParsingConstant.OverviewConstant.COURSE_HEADER_INNER).get(0);
 
             processNameFromHeader(header);
             processCreditFromHeader(header);
@@ -65,9 +64,8 @@ public class OverviewHandler implements BaseHandler {
 
     private void processNameFromHeader(Element header) {
         // Get the Html segment that only contains name and code
-        String nameHtml = header.getElementsByClass(Constants
-                .ParsingConstant.COURSE_HEADER_MAIN).get(0).html();
-        Matcher matcher = Constants.ParsingConstant.COURSE_HEADER_SUBJECT_NAME_PATTERN.matcher(nameHtml);
+        String nameHtml = header.getElementsByClass(Constants.HtmlParsingConstant.OverviewConstant.COURSE_HEADER_MAIN).get(0).html();
+        Matcher matcher = Constants.HtmlParsingConstant.OverviewConstant.COURSE_HEADER_SUBJECT_NAME_PATTERN.matcher(nameHtml);
         // If matcher found matches, output it
         if (matcher.matches()) {
             name = matcher.group(1);
@@ -81,9 +79,8 @@ public class OverviewHandler implements BaseHandler {
 
     private void processCreditFromHeader(Element header){
         // Get the Html segment that contains credits points
-        String creditHtml = header.getElementsByClass(Constants
-                .ParsingConstant.COURSE_HEADER_DETAIL).html();
-        Matcher matcher = Constants.ParsingConstant.COURSE_HEADER_CREDIT_PATTERN.matcher(creditHtml);
+        String creditHtml = header.getElementsByClass(Constants.HtmlParsingConstant.OverviewConstant.COURSE_HEADER_DETAIL).html();
+        Matcher matcher = Constants.HtmlParsingConstant.OverviewConstant.COURSE_HEADER_CREDIT_PATTERN.matcher(creditHtml);
         // If matcher found matches, output it
         if (matcher.find()) {
             credit = Float.parseFloat(matcher.group(1));
@@ -94,10 +91,9 @@ public class OverviewHandler implements BaseHandler {
     private void processBox(Document html) {
         try {
             // Get year/campus/availability/etc...
-            Element overviewBox = html.getElementsByClass(Constants
-                    .ParsingConstant.CLASS_OVERVIEW_BOX).get(0);
+            Element overviewBox = html.getElementsByClass(Constants.HtmlParsingConstant.OverviewConstant.CLASS_OVERVIEW_BOX).get(0);
             // The information is all contained in table entries
-            Elements rows = overviewBox.getElementsByTag(Constants.HTMLConstant.TR);
+            Elements rows = overviewBox.getElementsByTag(Constants.HtmlParsingConstant.TR);
             for (Element row : rows) {
                 Element rowHeader = row.child(0);
                 Element rowCell = rowHeader.nextElementSibling();
@@ -113,9 +109,9 @@ public class OverviewHandler implements BaseHandler {
 
     private void processIfYearPresent(Element rowHeader, Element rowCell) {
         if (HelperMethods.containsIgnoreCase(rowHeader.text(),
-                Constants.ParsingConstant.YEAR)) {
+                Constants.HtmlParsingConstant.OverviewConstant.YEAR)) {
             if (!HelperMethods.containsIgnoreCase(rowCell.text(),
-                    Constants.ParsingConstant.NOT_AVAILABLE)) {
+                    Constants.HtmlParsingConstant.OverviewConstant.NOT_AVAILABLE)) {
                 year = Year.parse(rowCell.text());
             }
         }
@@ -123,21 +119,21 @@ public class OverviewHandler implements BaseHandler {
 
     private void processIfLevelPresent(Element rowHeader, Element rowCell) {
         if (HelperMethods.containsIgnoreCase(rowHeader.text(),
-                Constants.ParsingConstant.SUBJECT_LEVEL)) {
+                Constants.HtmlParsingConstant.OverviewConstant.SUBJECT_LEVEL)) {
             level = rowCell.text();
         }
     }
 
     private void processIfCampusPresent(Element rowHeader, Element rowCell) {
         if (HelperMethods.containsIgnoreCase(rowHeader.text(),
-                Constants.ParsingConstant.CAMPUS)) {
+                Constants.HtmlParsingConstant.OverviewConstant.CAMPUS)) {
             campus = rowCell.text();
         }
     }
 
     private void processIfAvailabilityPresent(Element rowHeader, Element rowCell) {
         if (HelperMethods.containsIgnoreCase(rowHeader.text(),
-                Constants.ParsingConstant.AVAILABILITY)) {
+                Constants.HtmlParsingConstant.OverviewConstant.AVAILABILITY)) {
             // Availability are texts captured by div tags
             // TODO deal with [Month - Online] type of availability, (month type and online)
             for (Element timeElement : rowCell.children()) {

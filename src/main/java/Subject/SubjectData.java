@@ -1,8 +1,9 @@
 package Subject;
 
 import Subject.HtmlHandler.BaseHandler;
-import Util.Constants;
 
+import Util.Constants;
+import Util.HelperMethods;
 import Util.JSONable;
 import org.apache.commons.csv.CSVRecord;
 import org.json.JSONObject;
@@ -10,11 +11,7 @@ import org.jsoup.nodes.Document;
 
 import java.util.Map;
 
-
-// TODO VERY important, the getXXXXX method will be used by library to determine the parsed json object,
-// TODO Making new class of info and link info will automatically convert current json structure to the desired structure!
-// TODO This file has TOO MANY LINES, need to delegate functions to component class. Think of a way of using delegation to write further refactor
-public class SubjectData extends Data implements JSONable {
+public class SubjectData extends BaseData implements JSONable {
     private ParsedData parsedData;
     private RawData rawData;
 
@@ -39,9 +36,9 @@ public class SubjectData extends Data implements JSONable {
     }
 
     public SubjectData(JSONObject jsonObject) {
-        super(jsonObject.getString(Constants.JSONKey.CODE));
-        JSONObject rawDataJson = jsonObject.getJSONObject("rawData");
-        JSONObject parsedDataJson = jsonObject.getJSONObject("parsedData");
+        super(jsonObject);
+        JSONObject rawDataJson = jsonObject.getJSONObject(Constants.JSONKey.RAW_DATA);
+        JSONObject parsedDataJson = jsonObject.getJSONObject(Constants.JSONKey.PARSED_DATA);
         rawData = new RawData(rawDataJson);
         parsedData = new ParsedData(parsedDataJson);
     }
@@ -52,7 +49,7 @@ public class SubjectData extends Data implements JSONable {
      */
     private Document fetchRawHtml(String entry) {
         Map<String, LinkData> linkDataGroup = rawData.getLinkDataGroup();
-        if (linkDataGroup.keySet().contains(entry) && linkDataGroup.get(entry) != null) {
+        if (linkDataGroup.containsKey(entry) && linkDataGroup.get(entry) != null) {
             LinkData linkData = linkDataGroup.get(entry);
             linkData.fetchHtmlFromLink();
             return linkData.getHtml();
@@ -64,7 +61,7 @@ public class SubjectData extends Data implements JSONable {
 
     public void processEntry(String entry, BaseHandler handler) {
         Document html = fetchRawHtml(entry);
-        if (html == null) {
+        if (HelperMethods.isNull(html)) {
             System.err.format("Unable to fetch html for:\n            %s : %s\n", toString(), entry);
             return;
         }
@@ -81,5 +78,21 @@ public class SubjectData extends Data implements JSONable {
         // Null value
         return String.format("code: %s, name: %s, year: %s", getCode(), parsedData.getName(),
                 parsedData.getYear().toString());
+    }
+
+    public ParsedData getParsedData() {
+        return parsedData;
+    }
+
+    public void setParsedData(ParsedData parsedData) {
+        this.parsedData = parsedData;
+    }
+
+    public RawData getRawData() {
+        return rawData;
+    }
+
+    public void setRawData(RawData rawData) {
+        this.rawData = rawData;
     }
 }

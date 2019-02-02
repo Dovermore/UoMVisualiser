@@ -7,18 +7,19 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-public class RawData extends Data implements JSONable {
-    private final Map<String, LinkData> linkDataGroup = Map.of(
-            Constants.HTMLConstant.OVERVIEW, new LinkData(),
-            Constants.HTMLConstant.ELIGIBILITY, new LinkData(),
-            Constants.HTMLConstant.ASSESSMENT, new LinkData(),
-            Constants.HTMLConstant.DATES_TIMES, new LinkData(),
-            Constants.HTMLConstant.FURTHER_INFO, new LinkData(),
-            Constants.HTMLConstant.PRINT, new LinkData()
-    );
+public class RawData extends BaseData implements JSONable {
+    private final Map<String, LinkData> linkDataGroup;
 
     RawData(String code) {
         super(code);
+        linkDataGroup = Map.of(
+                Constants.OVERVIEW, new LinkData(code),
+                Constants.ELIGIBILITY, new LinkData(code),
+                Constants.ASSESSMENT, new LinkData(code),
+                Constants.DATES_TIMES, new LinkData(code),
+                Constants.FURTHER_INFO, new LinkData(code),
+                Constants.PRINT, new LinkData(code)
+        );
     }
 
     /**
@@ -28,7 +29,7 @@ public class RawData extends Data implements JSONable {
     RawData(CSVRecord csvRecord) {
         this(csvRecord.get(0));
         for (int i = 0; i < 5; i++) {
-            String entryName = Constants.HTMLConstant.ALL_ENTRIES.get(i);
+            String entryName = Constants.ALL_ENTRIES.get(i);
             // Starts from 1 because 0 is code
             linkDataGroup.get(entryName).setLink(csvRecord.get(i+1));
         }
@@ -37,7 +38,17 @@ public class RawData extends Data implements JSONable {
 
     RawData(JSONObject jsonObject) {
         super(jsonObject);
-        // TODO other detail
+
+        JSONObject linkDataGroupJSONObject = jsonObject.getJSONObject(Constants.JSONKey.LINK_DATA_GROUP);
+
+        linkDataGroup = Map.of(
+                Constants.OVERVIEW, new LinkData(linkDataGroupJSONObject.getJSONObject(Constants.OVERVIEW)),
+                Constants.ELIGIBILITY, new LinkData(linkDataGroupJSONObject.getJSONObject(Constants.ELIGIBILITY)),
+                Constants.ASSESSMENT, new LinkData(linkDataGroupJSONObject.getJSONObject(Constants.ASSESSMENT)),
+                Constants.DATES_TIMES, new LinkData(linkDataGroupJSONObject.getJSONObject(Constants.DATES_TIMES)),
+                Constants.FURTHER_INFO, new LinkData(linkDataGroupJSONObject.getJSONObject(Constants.FURTHER_INFO)),
+                Constants.PRINT, new LinkData(linkDataGroupJSONObject.getJSONObject(Constants.PRINT))
+        );
     }
 
     public Map<String, LinkData> getLinkDataGroup() {

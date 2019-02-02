@@ -1,20 +1,22 @@
 package Subject;
 
 import Util.Constants;
+import Util.HelperMethods;
 import Util.JSONable;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.time.Year;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class ParsedData extends Data implements JSONable {
-    private String name = Constants.NULL;
-    private String overview = Constants.NULL;
-    private String level = Constants.NULL;
-    private Year year = Year.parse("0000");
+public class ParsedData extends BaseData implements JSONable {
+    private String name = Constants.NULL_STRING;
+    private String overview = Constants.NULL_STRING;
+    private String level = Constants.NULL_STRING;
+    private Year year = Constants.NULL_YEAR;
     private float credit = 0.0f;
-    private String campus = Constants.NULL;
+    private String campus = Constants.NULL_STRING;
     private HashSet<String> availability = new HashSet<>();
     private HashSet<String> prerequisites = new HashSet<>();
     private HashSet<String> corequisites = new HashSet<>();
@@ -26,7 +28,22 @@ public class ParsedData extends Data implements JSONable {
 
     public ParsedData(JSONObject jsonObject) {
         super(jsonObject);
-        // TODO further detail
+        //
+        name = jsonObject.getString(Constants.JSONKey.NAME);
+        overview = jsonObject.getString(Constants.JSONKey.OVERVIEW);
+        level = jsonObject.getString(Constants.JSONKey.LEVEL);
+        year = Year.parse(jsonObject.getString(Constants.JSONKey.YEAR));
+        credit = jsonObject.getFloat(Constants.JSONKey.CREDIT);
+        campus = jsonObject.getString(Constants.JSONKey.CAMPUS);
+        //
+        JSONArray jsonArray = jsonObject.getJSONArray(Constants.JSONKey.AVAILABILITY);
+        availability.addAll(HelperMethods.jsonArrayToArrayList(jsonArray));
+        jsonArray = (JSONArray) jsonObject.get(Constants.JSONKey.PREREQUISITES);
+        prerequisites.addAll(HelperMethods.jsonArrayToArrayList(jsonArray));
+        jsonArray = (JSONArray) jsonObject.get(Constants.JSONKey.COREQUISITES);
+        corequisites.addAll(HelperMethods.jsonArrayToArrayList(jsonArray));
+        jsonArray = (JSONArray) jsonObject.get(Constants.JSONKey.PROHIBITIONS);
+        prohibitions.addAll(HelperMethods.jsonArrayToArrayList(jsonArray));
     }
 
     public String getName() {
@@ -82,8 +99,8 @@ public class ParsedData extends Data implements JSONable {
         return (HashSet<String>) availability.clone();
     }
 
-    public void addAvailability(String... times) {
-        availability.addAll(Arrays.asList(times));
+    public void addAvailability(String... availabilities) {
+        this.availability.addAll(Arrays.asList(availabilities));
     }
 
     @SuppressWarnings("unchecked")
@@ -91,8 +108,8 @@ public class ParsedData extends Data implements JSONable {
         return (HashSet<String>) prerequisites.clone();
     }
 
-    public void addPrerequisites(String prerequisite) {
-        this.prerequisites.add(prerequisite);
+    public void addPrerequisites(String... prerequisites) {
+        this.prerequisites.addAll(Arrays.asList(prerequisites));
     }
 
     @SuppressWarnings("unchecked")
@@ -100,8 +117,8 @@ public class ParsedData extends Data implements JSONable {
         return (HashSet<String>) corequisites.clone();
     }
 
-    public void addCorequisites(String corequisite) {
-        this.corequisites.add(corequisite);
+    public void addCorequisites(String... corequisites) {
+        this.corequisites.addAll(Arrays.asList(corequisites));
     }
 
     @SuppressWarnings("unchecked")
@@ -109,7 +126,7 @@ public class ParsedData extends Data implements JSONable {
         return (HashSet<String>) prohibitions.clone();
     }
 
-    public void addProhibitions(String prohibition) {
-        this.prohibitions.add(prohibition);
+    public void addProhibitions(String... prohibitions) {
+        this.prohibitions.addAll(Arrays.asList(prohibitions));
     }
 }

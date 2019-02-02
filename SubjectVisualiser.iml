@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: me.xdrop:fuzzywuzzy:1.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.jetbrains:annotations:16.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations:17.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20180813" level="project" />
     <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.4" level="project" />
   </component>

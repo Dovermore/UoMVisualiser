@@ -1,27 +1,40 @@
 package Subject;
 
 import Util.Constants;
+import Util.HelperMethods;
+import Util.JSONable;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
-public class LinkData {
-    private String link = Constants.NULL;
-    private Document html = null;
+public class LinkData extends BaseData implements JSONable {
+    private String link = Constants.NULL_STRING;
+    private Document html = Constants.NULL_HTML;
 
-    public LinkData(String link) {
+    public LinkData(String code, String link) {
+        super(code);
         this.link = link;
     }
 
-    public LinkData() {}
+    public LinkData(String code) {
+        super(code);
+    }
+
+    public LinkData(JSONObject jsonObject) {
+        super(jsonObject);
+        String htmlString = jsonObject.getString(Constants.JSONKey.HTML);
+        html = Jsoup.parse(htmlString);
+        link = jsonObject.getString(Constants.JSONKey.LINK);
+    }
 
     /**
      * Fetch the html and return if successful
      * @return if the connection is successful
      */
     public boolean fetchHtmlFromLink() {
-        if (!link.equals(Constants.NULL) && html == null) {
+        if (!HelperMethods.isNull(link) && HelperMethods.isNull(html)) {
             try {
                 html = Jsoup.connect(link).get();
             } catch (IOException e) {

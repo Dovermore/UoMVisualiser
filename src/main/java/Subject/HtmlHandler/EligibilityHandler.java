@@ -2,6 +2,7 @@ package Subject.HtmlHandler;
 
 import Subject.ParsedData;
 import Util.Constants;
+import Util.HelperMethods;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -19,13 +20,17 @@ public class EligibilityHandler implements BaseHandler {
      */
     @Override
     public void parse(Document html, ParsedData parsedData) {
-        if (html == null || html.body().text().equals(Constants.NULL)) {
+        if (HelperMethods.isNull(html)) {
             return;
         }
 
         processPrerequisite(html);
         processCorequisite(html);
         processProhibition(html);
+
+        parsedData.addPrerequisites(prerequisites.toArray(new String[0]));
+        parsedData.addCorequisites(corequisites.toArray(new String[0]));
+        parsedData.addProhibitions(prohibitions.toArray(new String[0]));
     }
 
     /**
@@ -33,11 +38,11 @@ public class EligibilityHandler implements BaseHandler {
      */
     private void processPrerequisite(Document html) {
         // get the element, convert to just plain text
-        Element prerequisitesElement = html.getElementById(Constants.ParsingConstant.PREREQUISITES);
+        Element prerequisitesElement = html.getElementById(Constants.HtmlParsingConstant.AvailabilityConstant.PREREQUISITES);
         try {
             String requisiteText = prerequisitesElement.text();
             // Match against matcher
-            Matcher matcher = Constants.ParsingConstant.CODE_PATTERN.matcher(requisiteText);
+            Matcher matcher = Constants.HtmlParsingConstant.AvailabilityConstant.CODE_PATTERN.matcher(requisiteText);
             // Collect all found matches
             while (matcher.find()) {
                 prerequisites.add(matcher.group().toLowerCase());
@@ -70,11 +75,11 @@ public class EligibilityHandler implements BaseHandler {
 //     */
 //    private void processPrerequisite(Document html) {
 //        // get the element, convert to just plain text
-//        Element prerequisitesElement = html.getElementById(Constants.ParsingConstant.PREREQUISITES);
+//        Element prerequisitesElement = html.getElementById(Constants.HtmlParsingConstant.PREREQUISITES);
 //        try {
 //            String requisiteText = prerequisitesElement.text();
 //            // Match against matcher
-//            Matcher matcher = Constants.ParsingConstant.PREREQUISITE_PATTERN.matcher(requisiteText);
+//            Matcher matcher = Constants.HtmlParsingConstant.PREREQUISITE_PATTERN.matcher(requisiteText);
 //
 //            // nTODO deal with 3-D requirement, but not just buckets of requirements
 //            // nTODO Current: (A) and (B or C) and (D) --> need to deal with --> (A and B) or (B and C)
@@ -109,14 +114,14 @@ public class EligibilityHandler implements BaseHandler {
 //            for (int i = 0; i < expressions.size(); i++) {
 //                String expression = expressions.get(i);
 //                switch (expression) {
-//                    case Constants.ParsingConstant.AND_1:
-//                    case Constants.ParsingConstant.AND_2:
+//                    case Constants.HtmlParsingConstant.AND_1:
+//                    case Constants.HtmlParsingConstant.AND_2:
 //                        mode = AND_MODE;
 //                        break;
-//                    case Constants.ParsingConstant.OR_1:
+//                    case Constants.HtmlParsingConstant.OR_1:
 //                        break;
-//                    case Constants.ParsingConstant.ONE_OF:
-//                        if (i > 0 && expressions.get(i - 1).equals(Constants.ParsingConstant.AND_1)) {
+//                    case Constants.HtmlParsingConstant.ONE_OF:
+//                        if (i > 0 && expressions.get(i - 1).equals(Constants.HtmlParsingConstant.AND_1)) {
 //                            prerequisites.add(currentRequisites);
 //                            currentRequisites = new HashSet<>();
 //                        }
@@ -134,7 +139,7 @@ public class EligibilityHandler implements BaseHandler {
 //                        if (currentRequisites.size() < 1) {
 //                            currentRequisites.add(expression);
 //                        } else if ((mode == ONEOF_MODE) ||
-//                                (expressions.get(i - 1).equals(Constants.ParsingConstant.OR_1))) {
+//                                (expressions.get(i - 1).equals(Constants.HtmlParsingConstant.OR_1))) {
 //                            currentRequisites.add(expression);
 //                        } else {
 //                            prerequisites.add(currentRequisites);

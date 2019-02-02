@@ -24,12 +24,12 @@ public class SubjectHolder implements CSVable {
     private String yearCode;
 
     // Links of all fields
-    private String overviewLink = Constants.NULL;
-    private String eligibilityLink = Constants.NULL;
-    private String assessmentLink = Constants.NULL;
-    private String datesTimesLink = Constants.NULL;
-    private String furtherInfoLink = Constants.NULL;
-    private String printLink = Constants.NULL;
+    private String overviewLink = Constants.NULL_STRING;
+    private String eligibilityLink = Constants.NULL_STRING;
+    private String assessmentLink = Constants.NULL_STRING;
+    private String datesTimesLink = Constants.NULL_STRING;
+    private String furtherInfoLink = Constants.NULL_STRING;
+    private String printLink = Constants.NULL_STRING;
 
 
     public SubjectHolder(String code) {

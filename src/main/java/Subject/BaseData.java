@@ -4,14 +4,14 @@ import Util.Constants;
 import Util.JSONable;
 import org.json.JSONObject;
 
-public class Data implements JSONable {
+public class BaseData implements JSONable {
     private String code;
 
-    public Data(JSONObject jsonObject) {
+    public BaseData(JSONObject jsonObject) {
         code = jsonObject.getString(Constants.JSONKey.CODE);
     }
 
-    public Data(String code) {
+    public BaseData(String code) {
         this.code = code;
     }
 
@@ -41,8 +41,8 @@ public class Data implements JSONable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Data) {
-            return ((Data) obj).code.equals(code);
+        if (obj instanceof BaseData) {
+            return ((BaseData) obj).code.equals(code);
         }
         return false;
     }
@@ -51,7 +51,6 @@ public class Data implements JSONable {
         return this.code.equals(code);
     }
 
-    // TODO Implement
     @Override
     public String toString() {
         return String.format("code: %s", code);

@@ -92,7 +92,7 @@ public class Main {
                     input = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_INFO_JSON;
                 }
                 subjectHandler = new SubjectHandler();
-                subjectHandler.loadSubjectsJSON(input);
+                subjectHandler.loadSubjects(input);
             }
             subjectHandler.processSubjects();
         }
