@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="2659.0" y="2991.0">com</node>
+    <node x="1793.0" y="2991.0">netscape</node>
+    <node x="3238.747792022792" y="557.0">Util.Constants.FileConstant</node>
+    <node x="1097.3523148148138" y="2508.0">Subject.SubjectHandler</node>
+    <node x="853.0" y="2991.0">toolbarButtonGraphics</node>
+    <node x="2744.147792022792" y="975.0">Util.CSVObject</node>
+    <node x="2973.0" y="2991.0">sun</node>
+    <node x="273.0" y="2991.0">Util.ClassNameException</node>
+    <node x="375.6335648148138" y="2187.5">Subject.SubjectData</node>
+    <node x="2331.0" y="2991.0">apple</node>
+    <node x="1369.0" y="2991.0">groovyjarjarasm</node>
+    <node x="192.24570868945898" y="1306.5">Subject.LinkData</node>
+    <node x="2817.0" y="2991.0">java</node>
+    <node x="1389.7021901709395" y="942.0">Util.Constants.HtmlParsingConstant</node>
+    <node x="2496.0" y="2991.0">javax</node>
+    <node x="137.6311253561255" y="579.0">Util.JSONable</node>
+    <node x="2447.089392551892" y="1285.5">Util.Constants.LinkConstant</node>
+    <node x="386.4643925518924" y="886.0">Subject.BaseData</node>
+    <node x="0.0" y="3120.2994791666665">me</node>
+    <node x="2097.8939814814808" y="1815.0">Util.With.Index</node>
+    <node x="2583.4356481481473" y="2574.0">Crawler.Crawler</node>
+    <node x="2019.5477920227922" y="1373.5">Util.With</node>
+    <node x="951.2689814814806" y="887.0">Util.HelperMethods</node>
+    <node x="1304.5477920227922" y="1285.5">Util.Constants.HtmlParsingConstant.AvailabilityConstant</node>
+    <node x="1981.0" y="2991.0">images</node>
+    <node x="402.6311253561255" y="403.0">Util.Constants.JSONKey</node>
+    <node x="3128.0" y="2991.0">org</node>
+    <node x="3019.747792022792" y="1838.0">Util.Queue</node>
+    <node x="2749.647792022792" y="1373.5">Util.CSVable</node>
+    <node x="1287.1439814814808" y="1871.0">Subject.HtmlHandler</node>
+    <node x="1596.5477920227922" y="1230.5">Util.Constants.HtmlParsingConstant.OverviewConstant</node>
+    <node x="2698.9521901709395" y="1705.0">Crawler.SubjectHolder</node>
+    <node x="670.2689814814808" y="1163.0">Subject.ParsedData</node>
+    <node x="2525.4356481481473" y="2176.0">Crawler.SubjectQueue</node>
+    <node x="3281.0" y="2991.0">jdk</node>
+    <node x="1599.0" y="2991.0">META-INF</node>
+    <node x="154.15010683760602" y="1826.5">Subject.RawData</node>
+    <node x="2156.0" y="2991.0">groovy</node>
+    <node x="2342.5477920227922" y="1748.5">Crawler.LinkProcessor</node>
+    <node x="925.0477920227922" y="0.0">Util.Constants</node>
+    <node x="2502.5606481481473" y="2873.0">Main.Main</node>
+    <node x="575.0" y="3003.8828125">groovyjarjarcommonscli</node>
+    <node x="40.0" y="3006.2994791666665">groovyjarjarantlr</node>
+    <node x="1127.0" y="2991.0">GraphComponent</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="Main.Main" target="Util.Constants.FileConstant">
+      <point x="92.75" y="-36.5" />
+      <point x="2701.3106481481473" y="2853.0" />
+      <point x="3361.247792022792" y="2853.0" />
+      <point x="0.0" y="47.5" />
+    </edge>
+    <edge source="Main.Main" target="Subject.SubjectHandler">
+      <point x="-39.75" y="-36.5" />
+      <point x="2568.8106481481473" y="2833.0" />
+      <point x="1338.1023148148138" y="2833.0" />
+      <point x="80.25" y="147.5" />
+    </edge>
+    <edge source="Crawler.SubjectQueue" target="Crawler.SubjectHolder">
+      <point x="-17.949999999999818" y="-126.0" />
+      <point x="2686.9856481481474" y="2106.0" />
+      <point x="2736.785523504273" y="2106.0" />
+      <point x="-75.66666666666652" y="180.5" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Subject.LinkData">
+      <point x="-55.89285714285711" y="-114.5" />
+      <point x="476.24070767195667" y="2116.0" />
+      <point x="448.650106837606" y="2116.0" />
+      <point x="448.650106837606" y="1665.0" />
+      <point x="409.245708689459" y="1665.0" />
+      <point x="93.0" y="92.5" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Subject.ParsedData">
+      <point x="33.535714285714334" y="-114.5" />
+      <point x="565.6692791005281" y="2106.0" />
+      <point x="761.0477920227922" y="2106.0" />
+      <point x="761.0477920227922" y="1685.0" />
+      <point x="702.7689814814808" y="1685.0" />
+      <point x="-97.5" y="236.0" />
+    </edge>
+    <edge source="Subject.RawData" target="Subject.LinkData">
+      <point x="53.25" y="-59.0" />
+      <point x="349.400106837606" y="1685.0" />
+      <point x="347.245708689459" y="1685.0" />
+      <point x="31.0" y="92.5" />
+    </edge>
+    <edge source="Subject.HtmlHandler" target="Util.Constants.HtmlParsingConstant">
+      <point x="-13.666666666666742" y="-14.5" />
+      <point x="1355.4773148148138" y="1665.0" />
+      <point x="1244.339458689459" y="1665.0" />
+      <point x="1244.339458689459" y="1143.0" />
+      <point x="1419.7021901709395" y="1143.0" />
+      <point x="-60.0" y="47.5" />
+    </edge>
+    <edge source="Crawler.SubjectQueue" target="Crawler.LinkProcessor">
+      <point x="-53.84999999999991" y="-126.0" />
+      <point x="2651.0856481481474" y="2126.0" />
+      <point x="2469.5477920227922" y="2126.0" />
+      <point x="0.0" y="137.0" />
+    </edge>
+    <edge source="Crawler.LinkProcessor" target="Util.Constants.LinkConstant">
+      <point x="63.5" y="-137.0" />
+      <point x="2533.0477920227922" y="1685.0" />
+      <point x="2512.839392551892" y="1685.0" />
+      <point x="-65.75" y="113.5" />
+    </edge>
+    <edge source="Subject.SubjectHandler" target="Util.Constants">
+      <point x="-144.45000000000005" y="-147.5" />
+      <point x="1113.402314814814" y="2488.0" />
+      <point x="11.0" y="2488.0" />
+      <point x="11.0" y="323.0" />
+      <point x="949.6102920227922" y="323.0" />
+      <point x="-106.4375" y="146.5" />
+    </edge>
+    <edge source="Crawler.SubjectHolder" target="Util.Constants.LinkConstant">
+      <point x="-90.80000000000018" y="-180.5" />
+      <point x="2721.6521901709393" y="1685.0" />
+      <point x="2644.339392551892" y="1685.0" />
+      <point x="65.75" y="113.5" />
+    </edge>
+    <edge source="Util.CSVable" target="Util.CSVObject">
+      <point x="0.0" y="-25.5" />
+      <point x="2863.147792022792" y="1143.0" />
+      <point x="2815.397792022792" y="1143.0" />
+      <point x="14.25" y="14.5" />
+    </edge>
+    <edge source="Subject.LinkData" target="Util.Constants">
+      <point x="-103.33333333333326" y="-92.5" />
+      <point x="212.91237535612572" y="1143.0" />
+      <point x="127.1311253561255" y="1143.0" />
+      <point x="127.1311253561255" y="343.0" />
+      <point x="982.3602920227922" y="343.0" />
+      <point x="-73.6875" y="146.5" />
+    </edge>
+    <edge source="groovyjarjarantlr" target="groovyjarjarantlr">
+      <point x="0.0" y="14.5" />
+      <point x="134.0" y="3065.2994791666665" />
+      <point x="10.0" y="3065.2994791666665" />
+      <point x="10.0" y="3020.7994791666665" />
+      <point x="-94.0" y="-0.0" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Util.HelperMethods">
+      <point x="122.96428571428578" y="-114.5" />
+      <point x="655.0978505290996" y="2146.0" />
+      <point x="1149.6856481481473" y="2146.0" />
+      <point x="1149.6856481481473" y="1143.0" />
+      <point x="1100.8523148148138" y="1143.0" />
+      <point x="-29.916666666666742" y="102.5" />
+    </edge>
+    <edge source="Util.Constants.HtmlParsingConstant.OverviewConstant" target="Util.Constants.HtmlParsingConstant">
+      <point x="0.0" y="-168.5" />
+      <point x="1797.5477920227922" y="1143.0" />
+      <point x="1539.7021901709395" y="1143.0" />
+      <point x="60.0" y="47.5" />
+    </edge>
+    <edge source="Main.Main" target="Crawler.Crawler">
+      <point x="13.25" y="-36.5" />
+      <point x="2621.8106481481473" y="2823.0" />
+      <point x="2644.1856481481473" y="2823.0" />
+      <point x="-60.75" y="81.5" />
+    </edge>
+    <edge source="Util.HelperMethods" target="Util.Constants">
+      <point x="0.0" y="-102.5" />
+      <point x="1130.7689814814808" y="383.0" />
+      <point x="1064.2352920227922" y="383.0" />
+      <point x="8.1875" y="146.5" />
+    </edge>
+    <edge source="Subject.ParsedData" target="Subject.BaseData">
+      <point x="-65.0" y="-236.0" />
+      <point x="735.2689814814808" y="1113.0" />
+      <point x="616.1518925518924" y="1113.0" />
+      <point x="107.1875" y="103.5" />
+    </edge>
+    <edge source="Subject.LinkData" target="Util.JSONable">
+      <point x="-62.0" y="-92.5" />
+      <point x="254.24570868945898" y="1133.0" />
+      <point x="200.66666666666697" y="1133.0" />
+      <point x="200.66666666666697" y="846.0" />
+      <point x="260.1311253561255" y="846.0" />
+      <point x="0.0" y="25.5" />
+    </edge>
+    <edge source="Util.Constants.FileConstant" target="Util.Constants">
+      <point x="0.0" y="-47.5" />
+      <point x="3361.247792022792" y="313.0" />
+      <point x="1178.8602920227922" y="313.0" />
+      <point x="122.8125" y="146.5" />
+    </edge>
+    <edge source="Util.Constants.HtmlParsingConstant" target="Util.Constants">
+      <point x="0.0" y="-47.5" />
+      <point x="1479.7021901709395" y="373.0" />
+      <point x="1080.6102920227922" y="373.0" />
+      <point x="24.5625" y="146.5" />
+    </edge>
+    <edge source="Crawler.SubjectQueue" target="Util.With">
+      <point x="-125.65000000000009" y="-126.0" />
+      <point x="2579.285648148147" y="2146.0" />
+      <point x="2275.5643925518925" y="2146.0" />
+      <point x="2275.5643925518925" y="1685.0" />
+      <point x="2291.3477920227924" y="1685.0" />
+      <point x="120.80000000000018" y="25.5" />
+    </edge>
+    <edge source="Crawler.SubjectQueue" target="Util.With.Index">
+      <point x="-161.54999999999973" y="-126.0" />
+      <point x="2543.3856481481475" y="2156.0" />
+      <point x="2209.6439814814808" y="2156.0" />
+      <point x="37.25" y="70.5" />
+    </edge>
+    <edge source="Main.Main" target="Crawler.SubjectQueue">
+      <point x="66.25" y="-36.5" />
+      <point x="2674.8106481481473" y="2843.0" />
+      <point x="2836.9356481481473" y="2843.0" />
+      <point x="2836.9356481481473" y="2488.0" />
+      <point x="2839.5606481481473" y="2488.0" />
+      <point x="134.625" y="126.0" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Subject.BaseData">
+      <point x="-11.178571428571445" y="-114.5" />
+      <point x="520.9549933862423" y="2086.0" />
+      <point x="563.4956425518924" y="2086.0" />
+      <point x="563.4956425518924" y="1123.0" />
+      <point x="554.9018925518924" y="1123.0" />
+      <point x="45.9375" y="103.5" />
+    </edge>
+    <edge source="Subject.HtmlHandler" target="Subject.ParsedData">
+      <point x="-68.33333333333326" y="-14.5" />
+      <point x="1300.8106481481473" y="1685.0" />
+      <point x="897.7689814814808" y="1685.0" />
+      <point x="97.5" y="236.0" />
+    </edge>
+    <edge source="Crawler.SubjectQueue" target="Util.HelperMethods">
+      <point x="-89.75" y="-126.0" />
+      <point x="2615.1856481481473" y="2136.0" />
+      <point x="2332.0477920227922" y="2136.0" />
+      <point x="2332.0477920227922" y="1133.0" />
+      <point x="1280.3523148148142" y="1133.0" />
+      <point x="149.58333333333348" y="102.5" />
+    </edge>
+    <edge source="Subject.HtmlHandler" target="Util.Constants.HtmlParsingConstant.OverviewConstant">
+      <point x="41.0" y="-14.5" />
+      <point x="1410.1439814814808" y="1675.0" />
+      <point x="1797.5477920227922" y="1675.0" />
+      <point x="0.0" y="168.5" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Util.JSONable">
+      <point x="-145.32142857142844" y="-114.5" />
+      <point x="386.81213624338534" y="2156.0" />
+      <point x="22.0" y="2156.0" />
+      <point x="22.0" y="826.0" />
+      <point x="162.1311253561255" y="826.0" />
+      <point x="-98.0" y="25.5" />
+    </edge>
+    <edge source="Subject.LinkData" target="Util.Constants.JSONKey">
+      <point x="-20.666666666666742" y="-92.5" />
+      <point x="295.57904202279224" y="1143.0" />
+      <point x="313.3602258852259" y="1143.0" />
+      <point x="313.3602258852259" y="866.0" />
+      <point x="474.6311253561255" y="866.0" />
+      <point x="-48.0" y="201.5" />
+    </edge>
+    <edge source="Subject.HtmlHandler" target="Util.Constants.HtmlParsingConstant.AvailabilityConstant">
+      <point x="13.666666666666742" y="-14.5" />
+      <point x="1382.8106481481473" y="1665.0" />
+      <point x="1440.5477920227922" y="1665.0" />
+      <point x="0.0" y="113.5" />
+    </edge>
+    <edge source="Subject.ParsedData" target="Util.HelperMethods">
+      <point x="108.33333333333326" y="-236.0" />
+      <point x="908.602314814814" y="1143.0" />
+      <point x="1041.0189814814808" y="1143.0" />
+      <point x="-89.75" y="102.5" />
+    </edge>
+    <edge source="Subject.RawData" target="Util.Constants.JSONKey">
+      <point x="-53.25" y="-59.0" />
+      <point x="242.90010683760602" y="1665.0" />
+      <point x="77.25" y="1665.0" />
+      <point x="77.25" y="856.0" />
+      <point x="426.6311253561255" y="856.0" />
+      <point x="-96.0" y="201.5" />
+    </edge>
+    <edge source="Crawler.SubjectQueue" target="Util.Queue">
+      <point x="125.65000000000009" y="-126.0" />
+      <point x="2830.5856481481474" y="2146.0" />
+      <point x="3118.747792022792" y="2146.0" />
+      <point x="0.0" y="47.5" />
+    </edge>
+    <edge source="Crawler.Crawler" target="Crawler.SubjectQueue">
+      <point x="60.75" y="-81.5" />
+      <point x="2765.6856481481473" y="2488.0" />
+      <point x="2749.8106481481473" y="2488.0" />
+      <point x="44.875" y="126.0" />
+    </edge>
+    <edge source="Util.With.Index" target="Util.With">
+      <point x="-49.666666666666515" y="-70.5" />
+      <point x="2122.7273148148142" y="1685.0" />
+      <point x="2110.147792022792" y="1685.0" />
+      <point x="-60.40000000000009" y="25.5" />
+    </edge>
+    <edge source="Util.With" target="Util.With.Index">
+      <point x="60.40000000000009" y="25.5" />
+      <point x="2230.9477920227923" y="1685.0" />
+      <point x="2222.0606481481473" y="1685.0" />
+      <point x="49.666666666666515" y="-70.5" />
+    </edge>
+    <edge source="Util.Constants.HtmlParsingConstant.AvailabilityConstant" target="Util.Constants.HtmlParsingConstant">
+      <point x="0.0" y="-113.5" />
+      <point x="1440.5477920227922" y="1143.0" />
+      <point x="1479.7021901709395" y="1143.0" />
+      <point x="0.0" y="47.5" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Subject.HtmlHandler">
+      <point x="145.32142857142856" y="-114.5" />
+      <point x="677.4549933862423" y="2156.0" />
+      <point x="1307.6439814814808" y="2156.0" />
+      <point x="-61.5" y="14.5" />
+    </edge>
+    <edge source="Subject.BaseData" target="Util.Constants.JSONKey">
+      <point x="0.0" y="-103.5" />
+      <point x="508.9643925518924" y="866.0" />
+      <point x="522.6311253561255" y="866.0" />
+      <point x="0.0" y="201.5" />
+    </edge>
+    <edge source="Crawler.SubjectHolder" target="Util.CSVObject">
+      <point x="0.0" y="-180.5" />
+      <point x="2812.4521901709395" y="1665.0" />
+      <point x="2739.147792022792" y="1665.0" />
+      <point x="2739.147792022792" y="1143.0" />
+      <point x="2786.897792022792" y="1143.0" />
+      <point x="-14.25" y="14.5" />
+    </edge>
+    <edge source="Subject.RawData" target="Subject.BaseData">
+      <point x="124.25" y="-59.0" />
+      <point x="420.400106837606" y="1685.0" />
+      <point x="479.5268925518924" y="1685.0" />
+      <point x="479.5268925518924" y="1123.0" />
+      <point x="493.6518925518924" y="1123.0" />
+      <point x="-15.3125" y="103.5" />
+    </edge>
+    <edge source="Crawler.SubjectQueue" target="Util.Constants">
+      <point x="161.55000000000018" y="-126.0" />
+      <point x="2866.4856481481474" y="2156.0" />
+      <point x="3228.247792022792" y="2156.0" />
+      <point x="3228.247792022792" y="323.0" />
+      <point x="1162.4852920227922" y="323.0" />
+      <point x="106.4375" y="146.5" />
+    </edge>
+    <edge source="Util.Constants.LinkConstant" target="Util.Constants">
+      <point x="0.0" y="-113.5" />
+      <point x="2578.589392551892" y="343.0" />
+      <point x="1129.7352920227922" y="343.0" />
+      <point x="73.6875" y="146.5" />
+    </edge>
+    <edge source="groovyjarjarcommonscli" target="groovyjarjarcommonscli">
+      <point x="-58.25" y="14.5" />
+      <point x="633.25" y="3052.8828125" />
+      <point x="555.0" y="3052.8828125" />
+      <point x="555.0" y="3025.6328125" />
+      <point x="-116.5" y="7.25" />
+    </edge>
+    <edge source="Subject.RawData" target="Util.JSONable">
+      <point x="-88.75" y="-59.0" />
+      <point x="207.40010683760602" y="1675.0" />
+      <point x="66.25" y="1675.0" />
+      <point x="66.25" y="836.0" />
+      <point x="211.1311253561255" y="836.0" />
+      <point x="-49.0" y="25.5" />
+    </edge>
+    <edge source="Subject.BaseData" target="Util.JSONable">
+      <point x="-81.66666666666674" y="-103.5" />
+      <point x="427.29772588522565" y="846.0" />
+      <point x="309.1311253561255" y="846.0" />
+      <point x="49.0" y="25.5" />
+    </edge>
+    <edge source="Main.Main" target="Util.Constants">
+      <point x="-92.75" y="-36.5" />
+      <point x="2515.8106481481473" y="2853.0" />
+      <point x="0.0" y="2853.0" />
+      <point x="0.0" y="313.0" />
+      <point x="933.2352920227922" y="313.0" />
+      <point x="-122.8125" y="146.5" />
+    </edge>
+    <edge source="Util.Constants.JSONKey" target="Util.Constants">
+      <point x="0.0" y="-201.5" />
+      <point x="522.6311253561255" y="353.0" />
+      <point x="998.7352920227922" y="353.0" />
+      <point x="-57.3125" y="146.5" />
+    </edge>
+    <edge source="Subject.BaseData" target="Util.Constants">
+      <point x="81.66666666666663" y="-103.5" />
+      <point x="590.631059218559" y="866.0" />
+      <point x="653.1311253561255" y="866.0" />
+      <point x="653.1311253561255" y="363.0" />
+      <point x="1015.1102920227922" y="363.0" />
+      <point x="-40.9375" y="146.5" />
+    </edge>
+    <edge source="Crawler.LinkProcessor" target="Util.Constants">
+      <point x="-63.5" y="-137.0" />
+      <point x="2406.0477920227922" y="1685.0" />
+      <point x="2431.4227920227922" y="1685.0" />
+      <point x="2431.4227920227922" y="353.0" />
+      <point x="1113.3602920227922" y="353.0" />
+      <point x="57.3125" y="146.5" />
+    </edge>
+    <edge source="Crawler.SubjectHolder" target="Util.CSVable">
+      <point x="45.40000000000009" y="-180.5" />
+      <point x="2857.8521901709396" y="1685.0" />
+      <point x="2863.147792022792" y="1685.0" />
+      <point x="0.0" y="25.5" />
+    </edge>
+    <edge source="Subject.SubjectHandler" target="Util.With">
+      <point x="112.34999999999991" y="-147.5" />
+      <point x="1370.2023148148137" y="2478.0" />
+      <point x="2022.8895833333336" y="2478.0" />
+      <point x="2022.8895833333336" y="1685.0" />
+      <point x="2049.747792022792" y="1685.0" />
+      <point x="-120.80000000000018" y="25.5" />
+    </edge>
+    <edge source="Subject.LinkData" target="Subject.BaseData">
+      <point x="62.0" y="-92.5" />
+      <point x="378.245708689459" y="1123.0" />
+      <point x="432.4018925518924" y="1123.0" />
+      <point x="-76.5625" y="103.5" />
+    </edge>
+    <edge source="Subject.HtmlHandler" target="Util.Constants">
+      <point x="68.33333333333326" y="-14.5" />
+      <point x="1437.4773148148138" y="1685.0" />
+      <point x="2009.0477920227922" y="1685.0" />
+      <point x="2009.0477920227922" y="363.0" />
+      <point x="1096.9852920227922" y="363.0" />
+      <point x="40.9375" y="146.5" />
+    </edge>
+    <edge source="Subject.HtmlHandler" target="Util.HelperMethods">
+      <point x="-41.0" y="-14.5" />
+      <point x="1328.1439814814808" y="1675.0" />
+      <point x="1202.4895833333335" y="1675.0" />
+      <point x="1202.4895833333335" y="1143.0" />
+      <point x="1220.5189814814808" y="1143.0" />
+      <point x="89.75" y="102.5" />
+    </edge>
+    <edge source="Subject.SubjectHandler" target="Util.HelperMethods">
+      <point x="-16.049999999999955" y="-147.5" />
+      <point x="1241.802314814814" y="2448.0" />
+      <point x="1160.6856481481473" y="2448.0" />
+      <point x="29.916666666666742" y="102.5" />
+    </edge>
+    <edge source="Subject.SubjectHandler" target="Util.With.Index">
+      <point x="144.45000000000005" y="-147.5" />
+      <point x="1402.302314814814" y="2488.0" />
+      <point x="2135.1439814814808" y="2488.0" />
+      <point x="-37.25" y="70.5" />
+    </edge>
+    <edge source="Crawler.SubjectHolder" target="Util.Constants">
+      <point x="90.80000000000018" y="-180.5" />
+      <point x="2903.2521901709397" y="1685.0" />
+      <point x="2987.147792022792" y="1685.0" />
+      <point x="2987.147792022792" y="333.0" />
+      <point x="1146.1102920227922" y="333.0" />
+      <point x="90.0625" y="146.5" />
+    </edge>
+    <edge source="Crawler.SubjectQueue" target="Util.CSVObject">
+      <point x="89.75" y="-126.0" />
+      <point x="2794.6856481481473" y="2136.0" />
+      <point x="3009.247792022792" y="2136.0" />
+      <point x="3009.247792022792" y="1133.0" />
+      <point x="2843.897792022792" y="1133.0" />
+      <point x="42.75" y="14.5" />
+    </edge>
+    <edge source="Subject.RawData" target="Util.Constants">
+      <point x="-124.25" y="-59.0" />
+      <point x="171.90010683760602" y="1685.0" />
+      <point x="55.25" y="1685.0" />
+      <point x="55.25" y="333.0" />
+      <point x="965.9852920227922" y="333.0" />
+      <point x="-90.0625" y="146.5" />
+    </edge>
+    <edge source="Subject.ParsedData" target="Util.JSONable">
+      <point x="-21.666666666666742" y="-236.0" />
+      <point x="778.602314814814" y="1123.0" />
+      <point x="793.1310592185591" y="1123.0" />
+      <point x="793.1310592185591" y="836.0" />
+      <point x="358.1311253561255" y="836.0" />
+      <point x="98.0" y="25.5" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Subject.RawData">
+      <point x="-78.25" y="-114.5" />
+      <point x="453.8835648148138" y="2126.0" />
+      <point x="390.81677350427276" y="2126.0" />
+      <point x="94.66666666666674" y="59.0" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Util.Constants">
+      <point x="100.60714285714289" y="-114.5" />
+      <point x="632.7407076719567" y="2136.0" />
+      <point x="940.7689814814808" y="2136.0" />
+      <point x="940.7689814814808" y="383.0" />
+      <point x="1047.8602920227922" y="383.0" />
+      <point x="-8.1875" y="146.5" />
+    </edge>
+    <edge source="Subject.SubjectData" target="Util.Constants.JSONKey">
+      <point x="11.178571428571445" y="-114.5" />
+      <point x="543.3121362433852" y="2096.0" />
+      <point x="641.9643925518924" y="2096.0" />
+      <point x="641.9643925518924" y="856.0" />
+      <point x="570.6311253561255" y="856.0" />
+      <point x="48.0" y="201.5" />
+    </edge>
+    <edge source="Subject.ParsedData" target="Util.Constants">
+      <point x="65.0" y="-236.0" />
+      <point x="865.2689814814808" y="1123.0" />
+      <point x="860.0355235042726" y="1123.0" />
+      <point x="860.0355235042726" y="373.0" />
+      <point x="1031.4852920227922" y="373.0" />
+      <point x="-24.5625" y="146.5" />
+    </edge>
+    <edge source="Subject.SubjectHandler" target="Subject.SubjectData">
+      <point x="-80.25" y="-147.5" />
+      <point x="1177.6023148148138" y="2468.0" />
+      <point x="532.1335648148138" y="2468.0" />
+      <point x="0.0" y="114.5" />
+    </edge>
+    <edge source="Subject.SubjectHandler" target="Subject.HtmlHandler">
+      <point x="80.25" y="-147.5" />
+      <point x="1338.1023148148138" y="2468.0" />
+      <point x="1400.6439814814808" y="2468.0" />
+      <point x="1400.6439814814808" y="2156.0" />
+      <point x="1430.6439814814808" y="2156.0" />
+      <point x="61.5" y="14.5" />
+    </edge>
+    <edge source="Subject.ParsedData" target="Util.Constants.JSONKey">
+      <point x="21.66666666666663" y="-236.0" />
+      <point x="821.9356481481474" y="1123.0" />
+      <point x="805.7689814814805" y="1123.0" />
+      <point x="805.7689814814805" y="826.0" />
+      <point x="618.6311253561255" y="826.0" />
+      <point x="96.0" y="201.5" />
+    </edge>
+    <edge source="Subject.LinkData" target="Util.HelperMethods">
+      <point x="103.33333333333337" y="-92.5" />
+      <point x="419.57904202279235" y="1133.0" />
+      <point x="981.1856481481474" y="1133.0" />
+      <point x="-149.58333333333326" y="102.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.7000000000000001" x="574.5" y="405.71428571428567" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Inner Classes</Category>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
