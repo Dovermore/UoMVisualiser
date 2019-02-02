@@ -23,30 +23,57 @@ public class Main {
             return;
         }
 
+        // Specifies the version (year) of handbook to crawl
         Year year = Year.parse("2019");
-        int num = 0;
-        boolean crawl = false;
-        int numToCrawl = Integer.MAX_VALUE;
-        boolean getHtml = false;
+        // Specifies if program should crawl links from scratch
+        boolean crawlLink = false;
+        // Specifies if program should download documents from given CSV file (Or default path if not specified
+        boolean downloadHtml = false;
+        // Specifies if program should process the document, either from URL or from local JSON file
         boolean parseHtml = false;
-        String output = null;
+        // Location of input file (if using CSV or JSON as input source)
         String input = null;
+        // Number of subject to read for CrawlUrl/DownloadHtml/ProcessHtml file (C for -c, D for -d, p for -P)
+        // TODO Rework logic for reading from input
+        int numSubjectC = -1;
+        int numSubjectD = -1;
+        int numSubjectP = -1;
+        // Location of output file
+        String output = null;
+        // Specifies the number of records to store to output files
+        int numToSave = -1;
 
+
+        // TODO add try catch statement for parsing error.
+        // NOTE: FOR OPTION c, g, p.         c takes priority over g and p and is not compatible with g and p
+        // NOTE: while g and p can be chained in to a Pipeline
         for (Option option : cl.getOptions()) {
             System.out.println(option.getOpt());
             switch (option.getOpt()) {
                 case "c":
-                    crawl = true;
-                    numToCrawl = option.getValue() != null ? Integer.parseInt(option.getValue()) : Integer.MAX_VALUE;
+                    crawlLink = true;
+                    // If the number of subject to read hasn't been specified, parse it (overrides -g value).
+                    if (option.getValue() != null) {
+                        numSubjectC = Integer.parseInt(option.getValue());
+                    }
                     break;
                 case "y":
                     year = Year.parse(option.getValue());
                     break;
                 case "g":
-                    getHtml = true;
+                    System.err.println("-g option will be replaced by -d option in future development");
+                case "d":
+                    downloadHtml = true;
+                    // Only parse this field if -c field is not yet specified.
+                    if (option.getValue() != null) {
+                        numSubjectD = Integer.parseInt(option.getValue());
+                    }
                     break;
                 case "p":
                     parseHtml = true;
+                    if (option.getValue() != null) {
+                        numSubjectP = Integer.parseInt(option.getValue());
+                    }
                     break;
                 case "o":
                     output = option.getValue();
@@ -55,44 +82,45 @@ public class Main {
                     input = option.getValue();
                     break;
                 case "n":
-                    num = Integer.parseInt(option.getValue());
+                    numToSave = Integer.parseInt(option.getValue());
                     break;
             }
         }
 
-        // At least one option has to be true
-        if (!crawl && !getHtml && !parseHtml) {
+        if (!(crawlLink || downloadHtml || parseHtml)) {
             return;
         }
 
-        if (crawl) {
-            // TODO implement optional number to crawl certain number of links
+        // If trying to crawl links
+        if (crawlLink) {
             SubjectQueue subjectQueue = new SubjectQueue(year);
             Crawler crawler = new Crawler(subjectQueue);
-            crawler.crawl(numToCrawl);
+            crawler.crawl(numSubjectC);
             if (output == null) {
                 output = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_LINK_CSV;
             }
-            subjectQueue.saveSubjectsToCSV(output, num);
+            subjectQueue.saveSubjectsToCSV(output, numToSave);
             return;
         }
 
-
+        // If not trying to crawl links
         SubjectHandler subjectHandler = null;
-        if (getHtml) {
+        // Download document from URL in CSV
+        if (downloadHtml) {
             if (input == null) {
                 input = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_LINK_CSV;
             }
-            subjectHandler = new SubjectHandler(input);
+            subjectHandler = new SubjectHandler(input, numSubjectD);
         }
 
+        // Process Html stored in JSON
         if (parseHtml) {
-            if (!getHtml) {
+            // If didn't specify document, then means reading from local file.
+            if (!downloadHtml) {
                 if (input == null) {
                     input = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_INFO_JSON;
                 }
-                subjectHandler = new SubjectHandler();
-                subjectHandler.loadSubjects(input);
+                subjectHandler = new SubjectHandler(input, numSubjectP);
             }
             subjectHandler.processSubjects();
         }
@@ -100,8 +128,7 @@ public class Main {
         if (output == null) {
             output = Constants.FileConstant.F_PATH + Constants.FileConstant.SUBJECT_INFO_JSON;
         }
-
-        subjectHandler.saveSubjects(output, num);
+        subjectHandler.saveSubjects(output, numToSave);
     }
 
     /**
@@ -111,45 +138,57 @@ public class Main {
     private static Options getClOptions() {
         Options options = new Options();
 
-        Option crawlOption = Option.builder("c")
-                .hasArg(true)
+        Option crawlLinks = Option.builder("c")
+                .numberOfArgs(1)
                 .optionalArg(true)
                 .longOpt("crawl-searches")
-                .desc("Use if the program should crawl all links again from search page, can specify number " +
-                        "after c if don't want to crawl all links.")
+                .desc("Use if the program should crawl all links again from search page, " +
+                        "Optionally pass a number to indicate the number of Subjects to crawl from Handbook")
                 .build();
-        options.addOption(crawlOption);
+        options.addOption(crawlLinks);
 
-        Option crawlYear = Option.builder("y")
-                .hasArg(true)
+        Option setYear = Option.builder("y")
+                .numberOfArgs(1)
                 .longOpt("crawl-year")
                 .desc("if should craw the searches, specify this for the year to crawl, by default 2019")
                 .build();
-        options.addOption(crawlYear);
+        options.addOption(setYear);
 
-        Option docOption = Option.builder("g")
-                .hasArg(false)
-                .longOpt("get-html")
-                .desc("Use if the program should get HTML documents again")
+        Option getHtml = Option.builder("g")
+                .numberOfArgs(1)
+                .optionalArg(true)
+                .longOpt("get-document")
+                .desc("Use if the program should get HTML documents again, can specify optional argument of " +
+                        "how many subjects' html it should download (This option will be replaced by -d in the future)")
                 .build();
-        options.addOption(docOption);
+        options.addOption(getHtml);
 
-        Option overviewParse = Option.builder("p")
-                .hasArg(false)
-                .longOpt("parse-html")
-                .desc("Parse the HTML document information")
+        Option downloadHtml = Option.builder("d")
+                .numberOfArgs(1)
+                .optionalArg(true)
+                .longOpt("download-document")
+                .desc("Use if the program should get HTML documents again, can specify optional argument of " +
+                        "how many subjects' html it should download")
                 .build();
-        options.addOption(overviewParse);
+        options.addOption(downloadHtml);
+
+        Option parseHtml = Option.builder("p")
+                .numberOfArgs(1)
+                .optionalArg(true)
+                .longOpt("process-document")
+                .desc("Parse the HTML document information, specify an optional argument of number of record to process")
+                .build();
+        options.addOption(parseHtml);
 
         Option output = Option.builder("o")
-                .hasArg(true)
+                .numberOfArgs(1)
                 .longOpt("output-file")
                 .desc("The file to output to, if there is any option suitable for output")
                 .build();
         options.addOption(output);
 
         Option input = Option.builder("i")
-                .hasArg(true)
+                .numberOfArgs(1)
                 .longOpt("input-file")
                 .desc("The input file, if flag -g is specified should be a CSV file, " +
                         "else if -p is specified but not -g, then should be the JSON file.")
@@ -157,11 +196,13 @@ public class Main {
         options.addOption(input);
 
         Option numRecord = Option.builder("n")
-                .hasArg(true)
+                .numberOfArgs(1)
                 .longOpt("number-record")
-                .desc("Number of record to write to output file, for create smaller file for faster testing.")
+                .desc("Number of records to write to output file, for create smaller file for faster testing.")
                 .build();
         options.addOption(numRecord);
+
+        // TODO Add -h Option and implement help
 
         return options;
     }

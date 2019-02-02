@@ -1,8 +1,6 @@
 package Crawler;
 
-import Util.Constants;
-import Util.HelperMethods;
-import Util.Queue;
+import Util.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -29,11 +27,31 @@ public class SubjectQueue implements Queue {
     private ArrayList<String> seen;
 
     /**
+     * Initialise the page object with correct PREFIX/postfix for different pages
+     */
+    public SubjectQueue(Year year) {
+        searches = new ArrayList<>();
+        holderHashMap = new HashMap<>();
+        seen = new ArrayList<>();
+        LinkProcessor.setYear(year);
+        searches.add(LinkProcessor.getInstance().getRoot());
+    }
+
+    /**
+     * Initialise the page object with correct PREFIX/postfix for different pages
+     */
+    public SubjectQueue() {
+        this(Constants.DEFAULT_YEAR);
+    }
+
+    /**
      * Enqueue a link to the queue, will only enqueue links that matched either search or subject page regex.
      * @param link The link given to enqueue
      */
     @Override
     public void enqueue(String link) {
+        LinkProcessor linkProcessor = LinkProcessor.getInstance();
+
         // previously added, return directly
         if (seen.contains(link)) {
             return;
@@ -43,14 +61,14 @@ public class SubjectQueue implements Queue {
         }
 
 
-        if (LinkProcessor.getInstance().isSearchPage(link)) {
+        if (linkProcessor.isSearchPage(link)) {
             System.out.format("SearchPage : %s\n", link);
             searches.add(link);
-        } else if (LinkProcessor.getInstance().isSubjectPage(link)) {
+        } else if (linkProcessor.isSubjectPage(link)) {
             System.out.format("SubjectPage : %s\n", link);
 
             // get subjectHolder code
-            String code = LinkProcessor.getInstance().getSubjectCode(link);
+            String code = linkProcessor.getSubjectCode(link);
             // if subjectHolder not already existed, create it and put into map
             if (holderHashMap.get(code) == null) {
                 holderHashMap.put(code, new SubjectHolder(code));
@@ -76,28 +94,11 @@ public class SubjectQueue implements Queue {
      */
     @Override
     public String dequeue() {
+        // Dequeue only if the subject field is not filled or there are still un-searched link in searches
         if (searches.size() > 0) {
             return searches.remove(0);
         }
         return null;
-    }
-
-    /**
-     * Initialise the page object with correct PREFIX/postfix for different pages
-     */
-    public SubjectQueue(Year year) {
-        searches = new ArrayList<>();
-        holderHashMap = new HashMap<>();
-        seen = new ArrayList<>();
-        LinkProcessor.setYear(year);
-        searches.add(LinkProcessor.getInstance().getRoot());
-    }
-
-    /**
-     * Initialise the page object with correct PREFIX/postfix for different pages
-     */
-    public SubjectQueue() {
-        this(Constants.DEFAULT_YEAR);
     }
 
     public void saveSubjectsToCSV(String fName) {
@@ -118,14 +119,14 @@ public class SubjectQueue implements Queue {
                                 "eligibility", "assessment",
                                 "datesTimes", "furtherInfo", "print"));
 
-                int counter = 0;
-                for (SubjectHolder subjectHolder : holderHashMap.values()) {
-                    csvPrinter.printRecord(subjectHolder.toCSVObject());
-                    counter++;
-                    if (counter >= num) {
+                for (With.Index<SubjectHolder> index : With.index(holderHashMap.values())) {
+                    CSVObject csvObject = index.value().toCSVObject();
+                    csvPrinter.printRecord(csvObject);
+                    if (index.index() >= num - 1) {
                         break;
                     }
                 }
+
                 csvPrinter.flush();
                 csvPrinter.close();
                 fileWriter.close();

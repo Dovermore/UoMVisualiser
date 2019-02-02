@@ -32,7 +32,6 @@ public class SubjectData extends BaseData implements JSONable {
     public SubjectData(CSVRecord record) {
         this(record.get(0));
         rawData = new RawData(record);
-        System.out.println();
     }
 
     public SubjectData(JSONObject jsonObject) {

@@ -5,6 +5,7 @@ import Subject.HtmlHandler.EligibilityHandler;
 import Subject.HtmlHandler.OverviewHandler;
 import Util.Constants;
 import Util.HelperMethods;
+import Util.With;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -22,8 +23,8 @@ public class SubjectHandler {
 
     private ArrayList<SubjectData> subjectData = new ArrayList<>();
 
-    public SubjectHandler(String fileName) {
-        loadSubjects(fileName);
+    public SubjectHandler(String fileName, int num) {
+        loadSubjects(fileName, num);
     }
 
     public SubjectHandler(ArrayList<SubjectData> subjectData) {
@@ -86,54 +87,61 @@ public class SubjectHandler {
      * @param fileName path and name of the file to be read
      * @param format The format to read the file with currently support "json", "csv
      */
-    public void loadSubjects(String fileName, String format) {
+    public void loadSubjects(String fileName, String format, int num) {
         // reset the subject data
         subjectData = new ArrayList<>();
             if (format.equalsIgnoreCase("json")) {
                 // If file format is specified as json
-                loadSubjectsFromJSON(fileName);
+                loadSubjectsFromJSON(fileName, num);
             } else if (format.equalsIgnoreCase("csv")) {
                 // If file format is specified as csv
-                loadSubjectsFromCSV(fileName);
+                loadSubjectsFromCSV(fileName, num);
             }
     }
 
-    private void loadSubjectsFromJSON(String fileName) {
+    private void loadSubjectsFromJSON(String fileName, int num) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             JSONObject jsonObject = new JSONObject(bufferedReader.lines().collect(Collectors.joining()));
 
-            for (String key : jsonObject.keySet()) {
-                // System.subjectData.println(key);
-                subjectData.add(new SubjectData(jsonObject.getJSONObject(key)));
+
+            for (With.Index<String> index: With.index(jsonObject.keySet())) {
+                subjectData.add(new SubjectData(jsonObject.getJSONObject(index.value())));
+                if (index.index() >= num - 1) {
+                    break;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadSubjectsFromCSV(String fileName) {
+    private void loadSubjectsFromCSV(String fileName, int num) {
         try (FileReader fileReader = new FileReader(fileName)) {
             // If file format is specified as csv
             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withHeader());
+            for (With.Index<CSVRecord> index : With.index(csvParser)) {
+                subjectData.add(new SubjectData(index.value()));
 
-            for (CSVRecord record : csvParser) {
-                subjectData.add(new SubjectData(record));
+                if (index.index() >= num - 1) {
+                    break;
+                }
             }
             csvParser.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     /**
      * Read the subject information JSON file and return a ArrayList containing all read information absubjectData the file
      * @param fileName path and name of the file to be read
      */
-    public void loadSubjects(String fileName) {
+    public void loadSubjects(String fileName, int num) {
         if (fileName.toLowerCase().endsWith(".json")) {
-            loadSubjects(fileName, "json");
+            loadSubjects(fileName, "json", num);
         } else if (fileName.toLowerCase().endsWith(".csv")) {
-            loadSubjects(fileName, "csv");
+            loadSubjects(fileName, "csv", num);
         }
     }
 

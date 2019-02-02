@@ -9,15 +9,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Hold the info crawled from search page
  */
 public class SubjectHolder implements CSVable {
-    // All subjects listed
-    private static ArrayList<String> allSubjects = new ArrayList<>();
-
     // Basic subject information
     private String code;
     private String facultyCode;
@@ -34,7 +30,6 @@ public class SubjectHolder implements CSVable {
 
     public SubjectHolder(String code) {
         this.code = code;
-        allSubjects.add(code);
         this.facultyCode = code.substring(0, 4);
         this.yearCode = code.substring(4, 9);
     }

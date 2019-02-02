@@ -36,6 +36,8 @@ public class LinkData extends BaseData implements JSONable {
     public boolean fetchHtmlFromLink() {
         if (!HelperMethods.isNull(link) && HelperMethods.isNull(html)) {
             try {
+                System.out.format("Fetching link for %s:\n" +
+                        "        %s\n", getCode(), link);
                 html = Jsoup.connect(link).get();
             } catch (IOException e) {
                 System.err.format("Failed to retrieve html from %s", link);
