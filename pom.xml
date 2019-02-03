@@ -54,23 +54,12 @@
             <version>1.6</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.jgrapht</groupId>
-            <artifactId>jgrapht-core</artifactId>
-            <version>1.3.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jgrapht</groupId>
-            <artifactId>jgrapht-io</artifactId>
-            <version>1.3.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>me.xdrop</groupId>
-            <artifactId>fuzzywuzzy</artifactId>
-            <version>1.2.0</version>
-        </dependency>
+        <!-- Possible usage so leave this here-->
+        <!--<dependency>-->
+            <!--<groupId>me.xdrop</groupId>-->
+            <!--<artifactId>fuzzywuzzy</artifactId>-->
+            <!--<version>1.2.0</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.jetbrains</groupId>

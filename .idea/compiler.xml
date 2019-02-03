@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11">
-      <module name="SubjectVisualiser" target="11" />
+      <module name="SubjectVisualiser" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
